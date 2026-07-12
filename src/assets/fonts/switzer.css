@@ -1,0 +1,11 @@
+/* Switzer — self-hosted from Fontshare (https://fontshare.com) */
+/* Variable font covers all weights (100-900) in a single file */
+@font-face {
+  font-family: "Switzer";
+  src:
+    url("./switzer/Switzer-Variable.woff2") format("woff2-variations"),
+    url("./switzer/Switzer-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: optional;
+  font-style: normal;
+}
