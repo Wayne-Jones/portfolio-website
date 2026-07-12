@@ -1,0 +1,87 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "warn"
+  },
+  "plugins": ["eslint", "react", "typescript", "oxc", "jsx-a11y"],
+  "jsPlugins": [
+    "oxlint-tailwindcss",
+    {
+      "name": "react-hooks-js",
+      "specifier": "eslint-plugin-react-hooks"
+    }
+  ],
+  "settings": {
+    "react": {
+      "version": "19.2",
+      "jsxRuntime": "automatic"
+    },
+    "tailwindcss": {
+      "entryPoint": "src/styles/globals.css"
+    }
+  },
+  "rules": {
+    "react-hooks-js/config": "error",
+    "react-hooks-js/error-boundaries": "error",
+    "react-hooks-js/exhaustive-deps": "warn",
+    "react-hooks-js/gating": "error",
+    "react-hooks-js/globals": "error",
+    "react-hooks-js/immutability": "error",
+    "react-hooks-js/incompatible-library": "warn",
+    "react-hooks-js/preserve-manual-memoization": "error",
+    "react-hooks-js/purity": "error",
+    "react-hooks-js/refs": "error",
+    "react-hooks-js/set-state-in-effect": "error",
+    "react-hooks-js/set-state-in-render": "error",
+    "react-hooks-js/static-components": "error",
+    "react-hooks-js/unsupported-syntax": "warn",
+    "react-hooks-js/use-memo": "error",
+    "react/rules-of-hooks": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
+    "eslint/no-inline-comments": "off",
+    "typescript/prefer-readonly-parameter-types": "off",
+    "typescript/no-unsafe-assignment": "off",
+    "eslint/eqeqeq": ["error", "smart"],
+    "eslint/require-unicode-regexp": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "jsx-a11y/alt-text": "error",
+    "tailwindcss/no-unknown-classes": "error",
+    "tailwindcss/no-duplicate-classes": "error",
+    "tailwindcss/no-conflicting-classes": "error",
+    "tailwindcss/no-deprecated-classes": "error",
+    "tailwindcss/no-unnecessary-whitespace": "error",
+    "tailwindcss/no-dark-without-light": "warn",
+    "tailwindcss/no-contradicting-variants": "warn",
+    "tailwindcss/enforce-canonical": "warn",
+    "tailwindcss/enforce-sort-order": "warn",
+    "tailwindcss/enforce-shorthand": "warn",
+    "tailwindcss/enforce-logical": "off",
+    "tailwindcss/enforce-physical": "off",
+    "tailwindcss/enforce-consistent-important-position": "warn",
+    "tailwindcss/enforce-negative-arbitrary-values": "warn",
+    "tailwindcss/enforce-consistent-variable-syntax": "warn",
+    "tailwindcss/consistent-variant-order": "warn",
+    "tailwindcss/max-class-count": "off",
+    "tailwindcss/enforce-consistent-line-wrapping": "off",
+    "tailwindcss/no-restricted-classes": "off",
+    "tailwindcss/no-arbitrary-value": "off",
+    "tailwindcss/no-hardcoded-colors": "warn",
+    "tailwindcss/no-unnecessary-arbitrary-value": "warn",
+    "tailwindcss/prefer-theme-tokens": "off"
+  },
+  "overrides": [
+    {
+      "files": ["src/routes/**"],
+      "rules": {
+        "react/only-export-components": "off"
+      }
+    }
+  ]
+}
