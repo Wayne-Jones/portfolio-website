@@ -1,0 +1,10 @@
+# Portfolio Website
+
+A personal portfolio showcasing work, photography, and blog posts.
+
+## Links
+
+- [Home](/)
+- [Portfolio](/portfolio)
+- [Photography](/photography)
+- [Blog](/blog)
