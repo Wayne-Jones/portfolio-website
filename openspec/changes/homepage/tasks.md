@@ -77,26 +77,26 @@
 
 ## 10. Navigation Integration
 
-- [ ] 10.1 Inspect `src/routes/__root.tsx` to understand existing nav structure
-- [ ] 10.2 Ensure homepage links to `/portfolio`, `/photography`, and `/blog` exist in the nav
-- [ ] 10.3 Add homepage link/logo to the nav if missing
+- [x] 10.1 Inspect `src/routes/__root.tsx` to understand existing nav structure
+- [x] 10.2 Ensure homepage links to `/portfolio`, `/photography`, and `/blog` exist in the nav
+- [x] 10.3 Add homepage link/logo to the nav if missing
 
 ## 11. Homepage Composition
 
-- [ ] 11.1 Rewrite `src/routes/index.tsx` to compose all sections in the correct order: Hero → WorkPortfolio → Photography → RecentPosts → ContactFooter
-- [ ] 11.2 Apply generous section spacing (≥96px desktop, ≥64px mobile)
-- [ ] 11.3 Verify the page is keyboard-navigable with visible focus states
-- [ ] 11.4 Verify all images have alt text
-- [ ] 11.5 Verify the page renders correctly in both light and dark modes
-- [ ] 11.6 Verify the page renders correctly from 320px to 2560px viewport widths
+- [x] 11.1 Rewrite `src/routes/index.tsx` to compose all sections in the correct order: Hero → WorkPortfolio → Photography → RecentPosts → ContactFooter
+- [x] 11.2 Apply generous section spacing (≥96px desktop, ≥64px mobile)
+- [x] 11.3 Verify the page is keyboard-navigable with visible focus states
+- [x] 11.4 Verify all images have alt text
+- [x] 11.5 Verify the page renders correctly in both light and dark modes
+- [x] 11.6 Verify the page renders correctly from 320px to 2560px viewport widths
 
 ## 12. Verification
 
-- [ ] 12.1 Run `pnpm dev` and visually confirm homepage matches the brief
-- [ ] 12.2 Run `pnpm build` and confirm no TypeScript or build errors
-- [ ] 12.3 Run `pnpm lint` (if configured) and resolve any warnings
-- [ ] 12.4 Test keyboard navigation through all sections
-- [ ] 12.5 Test with `prefers-reduced-motion: reduce` enabled in DevTools
-- [ ] 12.6 Test light and dark mode rendering
-- [ ] 12.7 Test mobile rendering at 375px and 320px widths
-- [ ] 12.8 Test view transitions by clicking work tiles, photos, and blog cards
+- [x] 12.1 Run `pnpm dev` and visually confirm homepage matches the brief
+- [x] 12.2 Run `pnpm build` and confirm no TypeScript or build errors
+- [x] 12.3 Run `pnpm lint` (if configured) and resolve any warnings
+- [x] 12.4 Test keyboard navigation through all sections
+- [x] 12.5 Test with `prefers-reduced-motion: reduce` enabled in DevTools
+- [x] 12.6 Test light and dark mode rendering
+- [x] 12.7 Test mobile rendering at 375px and 320px widths
+- [x] 12.8 Test view transitions by clicking work tiles, photos, and blog cards
