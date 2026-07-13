@@ -70,10 +70,10 @@
 
 ## 9. View Transitions Integration
 
-- [ ] 9.1 Confirm existing view-transitions infrastructure supports `view-transition-name` per element
-- [ ] 9.2 Add unique `view-transition-name` per work tile, photo tile, and blog card
-- [ ] 9.3 Ensure destination routes declare matching `view-transition-name` on their hero images
-- [ ] 9.4 Verify transitions fall back gracefully when API is unsupported
+- [x] 9.1 Confirm existing view-transitions infrastructure supports `view-transition-name` per element
+- [x] 9.2 Add unique `view-transition-name` per work tile, photo tile, and blog card
+- [x] 9.3 Ensure destination routes declare matching `view-transition-name` on their hero images
+- [x] 9.4 Verify transitions fall back gracefully when API is unsupported
 
 ## 10. Navigation Integration
 
