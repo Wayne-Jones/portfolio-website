@@ -152,14 +152,14 @@ export class MockAdapter implements ContentService {
   }
 
   getFeaturedProjects(limit: number): Promise<Project[]> {
-    return new Promise((resolve) => setTimeout(() => resolve(mockProjects.slice(0, limit)), 500));
+    return Promise.resolve(mockProjects.slice(0, limit));
   }
 
   getFeaturedPhotos(limit: number): Promise<Photo[]> {
-    return new Promise((resolve) => setTimeout(() => resolve(mockPhotos.slice(0, limit)), 500));
+    return Promise.resolve(mockPhotos.slice(0, limit));
   }
 
   getRecentPosts(limit: number): Promise<Post[]> {
-    return new Promise((resolve) => setTimeout(() => resolve(mockPosts.slice(0, limit)), 500));
+    return Promise.resolve(mockPosts.slice(0, limit));
   }
 }
