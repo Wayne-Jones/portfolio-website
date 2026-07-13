@@ -12,7 +12,7 @@ export function Section({ eyebrow, title, children, className }: SectionProps) {
   const ref = useRevealRef();
 
   return (
-    <section ref={ref} data-slot="section" className={cn("py-6 md:py-12", className)}>
+    <section ref={ref} data-slot="section" className={cn("py-16 md:py-24", className)}>
       <div className="mb-8">
         <p className="mb-0 text-xs tracking-widest text-muted uppercase">{eyebrow}</p>
         <hr className="my-3 h-px border-0 bg-fg/10" />

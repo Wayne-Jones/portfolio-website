@@ -6,8 +6,8 @@ import { ContactFooter } from "@/components/home/contact-footer/ContactFooter";
 import { Hero } from "@/components/home/hero/Hero";
 import { Photography } from "@/components/home/photography/Photography";
 import { WorkPortfolio } from "@/components/home/work-portfolio/WorkPortfolio";
-import type { Photo, Post, Project } from "@/content/types";
 import { contentService } from "@/content";
+import type { Photo, Post, Project } from "@/content/types";
 
 export const Route = createFileRoute("/")({
   loader: () => {

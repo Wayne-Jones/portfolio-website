@@ -72,7 +72,7 @@ export function Hero() {
   return (
     <section
       data-slot="hero"
-      className="relative isolate flex flex-col items-center pt-4 pb-8 sm:pt-8 sm:pb-24 sm:px-4"
+      className="relative isolate flex flex-col items-center pt-4 pb-16 sm:px-4 sm:pt-8 sm:pb-24"
     >
       <OutlineFilter />
       <div className="w-full max-w-150">
@@ -99,7 +99,7 @@ export function Hero() {
             alt="Portrait of Wayne Jones, web developer and photographer based in New York"
             width={200}
             height={250}
-            className="mt-10 w-32 mx-auto sm:w-44 lg:mt-0 lg:w-40 lg:mx-0"
+            className="mx-auto mt-10 w-32 sm:w-44 lg:mx-0 lg:mt-0 lg:w-40"
             style={{ aspectRatio: "4 / 5" }}
           />
         </div>
