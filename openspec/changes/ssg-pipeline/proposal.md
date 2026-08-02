@@ -6,17 +6,17 @@ Building static assets at webhook time and serving them from a CDN is the right 
 
 ## What Changes
 
-- Add `vite-react-ssg` (and its TanStack Router experimental adapter) as a build-time dependency.
-- Replace the `vite build` script with `vite-react-ssg build` so production output is pre-rendered HTML per route, not a single SPA shell.
-- Convert the root entry to the `ViteReactSSG(Tanstack)` wrapping pattern, exporting `createRoot` instead of mounting in an effect.
+- Adopt **TanStack Start** (`@tanstack/react-start`, v1) as the build-time SSG layer — the official Vite plugin for TanStack Router. This replaces the earlier plan to use `vite-react-ssg`, whose TanStack adapter is a throwing stub in every 0.9.x release.
+- Keep `vite build` as the production command; the `tanstackStart({ prerender: { enabled: true } })` plugin emits pre-rendered HTML per route (one `index.html` per static route + per slug) into `dist/client/`, not a single SPA shell.
+- Convert the root entry: move the router into `src/router.tsx` exporting a `getRouter()` factory (preserving the `startViewTransition` override and `Register` augmentation); `__root.tsx` renders the HTML document with `HeadContent`/`Scripts` and a `head` export; `src/main.tsx` and `index.html` are removed.
 - Add a `prebuild` script (`scripts/snapshot-content.ts`) that fetches all Ghost content via the existing `GhostAdapter` and serializes it to `src/content/data/{posts,projects,photosets}.json`. The build script invokes it automatically.
 - Extend the `ContentService` selection in `src/content/index.ts` so that:
   - `VITE_CMS=ghost` → live fetch (dev with real backend)
   - `VITE_CMS=snapshot` or unset at build time → reads from JSON snapshot
   - `VITE_CMS=mock` or any other value → returns `MockAdapter` (default offline dev)
-- Add a `getStaticPaths` style hook on dynamic routes (`blog.$slug.tsx`, `portfolio.$slug.tsx`, `photography.$slug.tsx`) so SSG can enumerate which paths to pre-render from the content snapshot.
-- Configure `ssgOptions.includedRoutes` in `vite.config.ts` to expand those slug patterns into concrete paths at build time.
-- Document the Vercel deploy + Ghost webhook integration in `README.md` (webhook payload → `git pull && pnpm build && deploy` or Vercel's deploy hook).
+- Enumerate dynamic slug paths in `vite.config.ts` (`prerender.pages`) from the snapshot JSON — `blog/$slug` and `portfolio/$slug` for every content item.
+- Add `src/routes/$.tsx` splat route for client-side 404 handling on static hosts, plus `vercel.json` (`outputDirectory: dist/client`).
+- Document the Vercel deploy + Ghost webhook integration in `README.md` (webhook payload → Vercel deploy hook → `pnpm build`).
 - Add npm scripts: `pnpm prebuild`, `pnpm snapshot`, `pnpm dev:ghost`, and keep `pnpm dev` for mock/offline mode.
 
 This change does **not** implement the content tree, render real post bodies, or wire pagination. Those come in subsequent changes.
@@ -32,10 +32,11 @@ This change does **not** implement the content tree, render real post bodies, or
 
 ## Impact
 
-- New dependency: `vite-react-ssg` (~107KB package, transitively pulls `jsdom`, `html5parser`, `react-helmet-async`). No runtime bundle impact because it runs only at build time.
-- Existing dependency `react-compiler` Babel plugin remains — `vite-react-ssg` invokes the same Vite config plugins and babel pipeline.
-- `package.json` scripts change: `build` becomes `vite-react-ssg build`, with `prebuild` running automatically before it.
-- New runtime code path: `src/content/data/*.json` files (gitignored or committed as snapshot — see design.md decision). Build output expands significantly (one HTML file per route + per slug).
-- Existing client-side behavior in dev (`pnpm dev`) is unchanged: SPA + Suspense + skeleton states still show because live fetch remains intact.
+- New dependency: `@tanstack/react-start` (v1, pinned) — the official TanStack framework plugin for Vite. Build-time only; no runtime bundle impact beyond the small client runtime Start adds for hydration.
+- `vite-react-ssg` (installed during earlier investigation) is removed.
+- Existing dependency `react-compiler` Babel plugin remains — Start runs the same Vite config plugins and babel pipeline.
+- `package.json` scripts: `build` stays `tsc -b && vite build` (SSG is driven by the Vite plugin, not a different CLI), with `prebuild` running automatically before it. Output moves from `dist/` to `dist/client/`.
+- New runtime code path: `src/content/data/*.json` files (committed as snapshot — see design.md decision). Build output expands significantly (one HTML file per route + per slug).
+- Dev mode changes: `pnpm dev` now runs the Start dev server (SSR + HMR) instead of a pure SPA; loaders execute server-side, so skeleton states appear only during client navigations, not first load. View transitions and animations are preserved.
 - Requires CORS to be open on the Ghost instance for live dev mode (`pnpm dev:ghost`). Build mode does NOT require runtime CORS — content is fetched at build time from the deploy environment, which is a normal egress scenario.
 - New external integration: a Vercel deploy hook triggered by a Ghost webhook on `post.published`, `post.updated`, `post.unpublished`, and `site.changed`. README documents the configuration; no code lives in this repo for the webhook receiver.

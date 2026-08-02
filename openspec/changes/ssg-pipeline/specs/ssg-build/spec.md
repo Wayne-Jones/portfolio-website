@@ -8,15 +8,15 @@ Define how the portfolio site is statically pre-rendered at build time, includin
 
 ### Requirement: Build script produces static HTML
 
-The project SHALL run `vite-react-ssg build` as its production build command, producing one fully-rendered `index.html` per route at the config-specified output directory.
+The project SHALL run `vite build` with the TanStack Start plugin's `prerender` option enabled as its production build, producing one fully-rendered `index.html` per route in `dist/client/`.
 
 #### Scenario: Build replaces the previous SPA build
 - **WHEN** `pnpm build` is invoked
-- **THEN** the output directory contains one `index.html` per route in the route tree, plus per-slug pages for each dynamic route with declared paths
+- **THEN** `dist/client/` contains one `index.html` per route in the route tree, plus per-slug pages for each dynamic route with declared paths
 
-#### Scenario: Build script replaces Vite SPA build
+#### Scenario: SSG is driven by the Vite plugin, not a different CLI
 - **WHEN** inspecting the `build` script in `package.json`
-- **THEN** it runs `vite-react-ssg build` rather than `vite build`
+- **THEN** it runs `vite build` (SSG driven by `tanstackStart({ prerender: { enabled: true } })` in `vite.config.ts`)
 
 ### Requirement: Prebuild fetches content snapshot before render
 
@@ -30,30 +30,38 @@ The project SHALL execute a `prebuild` script that fetches all content via the c
 - **WHEN** the build environment cannot reach the Ghost Content API
 - **THEN** the build fails at the snapshot step with a clear error rather than producing a partially-rendered output
 
-### Requirement: Root entry adapts to SSG pattern
+### Requirement: Root entry adapts to the SSG pipeline
 
-The project SHALL export a `createRoot` from the root entrypoint using the `ViteReactSSG(Tanstack)` wrapping pattern, enabling SSG to drive the app's initialization during the render pass.
+The project SHALL expose the router through a `getRouter()` factory in `src/router.tsx` so both the build-time render pass and the client hydration share one router definition, with the HTML document produced by the root route.
 
-#### Scenario: main.tsx exports createRoot
-- **WHEN** inspecting `src/main.tsx`
-- **THEN** it imports `Experimental_ViteReactSSG` from `vite-react-ssg/tanstack` and exports a `createRoot` configured with the existing TanStack router instance
-- **AND** it does NOT imperatively call `router.mount` or use `createRoot` from `react-dom/client` for the production mount
+#### Scenario: router.tsx exports a router factory
+- **WHEN** inspecting `src/router.tsx`
+- **THEN** it exports a `getRouter()` function creating the router from `routeTree.gen.ts` with the existing options (`defaultPreload: "intent"`, `defaultViewTransition: true`, `trailingSlash: "never"`), the `startViewTransition` override, and the `Register` module augmentation
+- **AND** `src/main.tsx` and the standalone `index.html` template are removed (the root route renders the document)
 
-#### Scenario: Dev mode continues to hydrate as before
+#### Scenario: Root route renders the HTML document
+- **WHEN** inspecting `src/routes/__root.tsx`
+- **THEN** it renders `<html>`/`<head>`/`<body>` with `HeadContent` and `Scripts`, and declares meta/favicon via a `head` export
+
+#### Scenario: Unknown paths render the 404 UI
+- **WHEN** a browser requests a path that was not pre-rendered
+- **THEN** a `$.tsx` splat route renders the not-found UI instead of the static host's default 404
+
+#### Scenario: Dev mode serves SSR pages
 - **WHEN** `pnpm dev` or `pnpm dev:ghost` is invoked
-- **THEN** the application mounts the existing router via the same hydration entry, with `vite` (not `vite-react-ssg`) driving the dev server
+- **THEN** the Start dev server renders pages server-side with HMR, using `MockAdapter`/`GhostAdapter` per `VITE_CMS`
 
 ### Requirement: Dynamic route paths are enumerable at build time
 
-The project SHALL enable `vite-react-ssg` to discover which concrete paths correspond to dynamic route patterns (e.g., `blog/$slug`) at build time, by exporting a `getStaticPaths` from each dynamic route file or by aggregating paths in `ssgOptions.includedRoutes`.
+The project SHALL enable the prerender pass to discover which concrete paths correspond to dynamic route patterns (e.g., `blog/$slug`) by listing them in `prerender.pages` in `vite.config.ts`, derived from the snapshot JSON.
 
 #### Scenario: Dynamic routes declare paths
 - **WHEN** inspecting the build configuration
-- **THEN** a list of slugs derived from `contentService.getPosts()`, `getProjects()`, and `getPhotoSets()` is supplied to `vite-react-ssg` so that each `blog/$slug`, `portfolio/$slug`, and `photography/$slug` is pre-rendered
+- **THEN** `prerender.pages` contains a `blog/<slug>` entry for every post and a `portfolio/<slug>` entry for every project in `src/content/data/*.json`
 
 #### Scenario: Multiple slugs produce multiple HTML files
 - **WHEN** the snapshot contains N posts and M projects
-- **THEN** the output directory contains N `blog/<slug>/index.html` files and M `portfolio/<slug>/index.html` files
+- **THEN** `dist/client/` contains N `blog/<slug>/index.html` files and M `portfolio/<slug>/index.html` files
 
 ### Requirement: Build does not require runtime Ghost access
 
@@ -64,8 +72,8 @@ The project SHALL complete a production build without depending on Ghost being r
 - **THEN** the render pass does not perform any outbound network request to Ghost
 
 #### Scenario: Build configuration hides secrets at render time
-- **WHEN** `vite build` runs (called via `vite-react-ssg build`)
-- **THEN** the production output (`dist/`) does not contain the value of `VITE_GHOST_CONTENT_API_KEY`; only the snapshot content is embedded
+- **WHEN** `vite build` runs (with the prerender plugin active)
+- **THEN** the production output (`dist/client/`) does not contain the value of `VITE_GHOST_CONTENT_API_KEY`; only the snapshot content is embedded
 
 ### Requirement: Pagination and listing page enumeration
 

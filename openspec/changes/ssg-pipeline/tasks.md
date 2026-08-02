@@ -1,7 +1,8 @@
 ## 1. Dependencies
 
-- [ ] 1.1 Install `vite-react-ssg` and pin a specific version in `package.json`'s `devDependencies`
-- [ ] 1.2 Verify the install pulls in `jsdom`, `html5parser`, and `react-helmet-async` transitively without conflict
+- [ ] 1.1 Verify `@tanstack/react-start` (≥1.167.x) supports the installed Vite 8/Rolldown; confirm peer version alignment with `@tanstack/react-router@^1.170`
+- [ ] 1.2 Install `@tanstack/react-start` pinned, remove `vite-react-ssg` from `devDependencies`
+- [ ] 1.3 Verify `pnpm dev` boots the Start dev server with the existing Vite config (React Compiler Babel preset, Tailwind v4) with no console errors
 
 ## 2. Snapshot Script
 
@@ -24,41 +25,44 @@
 
 ## 4. Root Entry Conversion
 
-- [ ] 4.1 Update `src/main.tsx` to import `Experimental_ViteReactSSG as ViteReactSSG` from `vite-react-ssg/tanstack`
-- [ ] 4.2 Replace the imperative `createRoot().render()` call with an exported `createRoot = ViteReactSSG({ router, routes: routeTree, basename: ... }, setupCallback)`
-- [ ] 4.3 Move shared setup code (any providers, hooks) into the setupCallback
-- [ ] 4.4 Verify `pnpm dev` still mounts the app correctly via TanStack Router's regular hydration
-- [ ] 4.5 Add a small comment block at the top of `main.tsx` explaining why both dev and prod share this entry
+- [ ] 4.1 Create `src/router.tsx` exporting `getRouter()` — `createRouter({ routeTree, defaultPreload: "intent", defaultViewTransition: true, trailingSlash: "never" })` with the `startViewTransition` override and the `Register` module augmentation preserved
+- [ ] 4.2 Convert `src/routes/__root.tsx` to render the HTML document: `<html>`/`<head>`/`<body>`, `HeadContent`, `Scripts`, and a `head: () => ({ meta, links })` export carrying the meta/favicon currently in `index.html`
+- [ ] 4.3 Remove `src/main.tsx` and `index.html`; confirm the Start plugin's default client/server entries hydrate and render
+- [ ] 4.4 Add `src/routes/$.tsx` splat route rendering the not-found UI (TanStack Router's default not-found component is not static-host-safe)
+- [ ] 4.5 Verify `pnpm dev` (mock) and `pnpm dev:ghost` serve pages server-side with HMR and no regressions to view transitions/animations
 
 ## 5. Build Configuration
 
-- [ ] 5.1 Update `vite.config.ts` to add `ssgOptions` per `vite-react-ssg` documentation (concurrency, root container id, includeAllRoutes: false)
-- [ ] 5.2 Implement `ssgOptions.includedRoutes` to enumerate dynamic paths by reading from the snapshot JSON files at build time
-- [ ] 5.3 Update `package.json` `build` script to `vite-react-ssg build`
-- [ ] 5.4 Verify `pnpm build` produces one `index.html` per static route
+- [ ] 5.1 Update `vite.config.ts`: add `tanstackStart({ prerender: { enabled: true, autoStaticPathsDiscovery: true, autoSubfolderIndex: true, pages: [...] } })`; keep route generation and existing plugins (verify plugin ordering)
+- [ ] 5.2 Enumerate dynamic slugs: `prerender.pages` entries derived from `src/content/data/posts.json` (`/blog/<slug>`) and `projects.json` (`/portfolio/<slug>`) at config load time
+- [ ] 5.3 Update `package.json`: `build` stays `tsc -b && vite build`; `preview` points at `dist/client`
+- [ ] 5.4 Add `vercel.json` — `outputDirectory: "dist/client"`, `cleanUrls: true`, catch-all rewrite to `/` for the `$.tsx` 404 fallback
+- [ ] 5.5 Verify `pnpm build` emits one `index.html` per static route in `dist/client/`
 
-## 6. Dynamic Route getStaticPaths (placeholder slugs only)
+## 6. Dynamic Route Prerendering (placeholder slugs only)
 
-- [ ] 6.1 Add a `getStaticPaths` export shape that `vite-react-ssg` recognizes to each of `blog.$slug.tsx`, `portfolio.$slug.tsx`, `photography.$slug.tsx` — returning slug arrays from the snapshot, even though the body is still a stub (detail rendering happens in `detail-routes` change)
-- [ ] 6.2 Verify the build now outputs `blog/<slug>/index.html` and `portfolio/<slug>/index.html` files per content item
+- [ ] 6.1 Confirm `blog.<slug>` and `portfolio.<slug>` entries in `prerender.pages` map to the existing `blog.$slug.tsx`/`portfolio.$slug.tsx` routes (route bodies are stubs — detail rendering happens in `detail-routes` change)
+- [ ] 6.2 Verify the build outputs `blog/<slug>/index.html` and `portfolio/<slug>/index.html` per content item; note `photography/$slug` is deferred until `detail-routes` adds the route file
 
 ## 7. Verification
 
 - [ ] 7.1 Run `pnpm snapshot` and confirm the three JSON files appear in `src/content/data/`
-- [ ] 7.2 Run `pnpm dev` (mock mode) and confirm the homepage renders identically to before
+- [ ] 7.2 Run `pnpm dev` (mock mode) and confirm the homepage renders identically to before (SSR dev server)
 - [ ] 7.3 Run `pnpm dev:ghost` and confirm the dev server still hits Ghost for live mode (where CORS is configured)
-- [ ] 7.4 Run `pnpm build` and confirm pre-rendered HTML files for static routes and every slug
+- [ ] 7.4 Run `pnpm build` and confirm pre-rendered HTML files for static routes and every slug under `dist/client/`
 - [ ] 7.5 Run `pnpm preview` against the built artifact and confirm no outbound requests are issued at first paint
-- [ ] 7.6 Inspect the produced `dist/index.html` for any static route and verify content is present at first paint
-- [ ] 7.7 Verify the build output `dist/` does not contain the value of `VITE_GHOST_CONTENT_API_KEY`
+- [ ] 7.6 Inspect the produced `dist/client/index.html` for any static route and verify content is present at first paint
+- [ ] 7.7 Verify `dist/client/` does not contain the value of `VITE_GHOST_CONTENT_API_KEY`
 - [ ] 7.8 Run `pnpm lint` and `pnpm build` with zero warnings and zero errors cap
+- [ ] 7.9 Verify the homepage's deferred sections (Suspense fallbacks not baked in) render fully in `dist/client/index.html`
 
 ## 8. Documentation
 
-- [ ] 8.1 Write a README section covering: dev modes (`pnpm dev`, `pnpm dev:ghost`), snapshot refresh (`pnpm snapshot`), build (`pnpm build`, `pnpm prebuild`), preview (`pnpm preview`)
+- [ ] 8.1 Write a README section covering: dev modes (`pnpm dev`, `pnpm dev:ghost`), snapshot refresh (`pnpm snapshot`), build (`pnpm build`, `pnpm prebuild`), preview (`pnpm preview`, served from `dist/client/`)
 - [ ] 8.2 Document the Ghost webhook → Vercel deploy hook integration in README (Ghost admin → Settings → Integrations → Custom Webhook → URL is the Vercel deploy hook URL; events: `post.published`, `post.updated`, `post.unpublished`, `site.changed`)
 - [ ] 8.3 Add a note in README about the snapshot being committed to git and how to refresh it
 - [ ] 8.4 Update `.env.example` to clarify that `VITE_CMS` is optional and the build-mode default is snapshot
+- [ ] 8.5 Document the static deploy shape: `dist/client/` output, `vercel.json`, `trailingSlash: "never"`, and the `$.tsx` 404 fallback
 
 ## 9. External Setup (Not Code)
 
