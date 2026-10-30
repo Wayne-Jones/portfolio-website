@@ -45,7 +45,7 @@ The project SHALL define typography tokens using Switzer for display/headings an
 #### Scenario: Font families are defined
 
 - **WHEN** inspecting the `@theme` block
-- **THEN** `--font-sans` is `"Switzer", system-ui, sans-serif` and `--font-mono` is `"IBM Plex Mono", ui-monospace, monospace`
+- **THEN** `--font-sans` is `"Inter Variable", "Inter", system-ui, sans-serif` (self-hosted via `@fontsource-variable/inter`), `--font-display` is `"Switzer", system-ui, sans-serif` (self-hosted via local `switzer.css`), and `--font-mono` is `"IBM Plex Mono", ui-monospace, monospace` (self-hosted via `@fontsource/ibm-plex-mono`)
 
 #### Scenario: Type scale uses fluid sizing
 
