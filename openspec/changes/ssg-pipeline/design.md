@@ -61,7 +61,7 @@ scripts/snapshot-content.ts
 vite build (tanstackStart prerender)
   ↓ loads the JSON snapshot in the adapter
   ↓ runs each route's loader against the snapshot
-  ↓ enumerates dynamic route paths via prerender.pages
+  ↓ enumerates dynamic route paths via the top-level `pages` option
   ↓ produces dist/client/{route}/index.html per route + per slug
 ```
 
@@ -93,21 +93,22 @@ We choose **commit** because the project is small, content churn is low, and a g
 
 ### Decision 5: Enumerate dynamic slug paths in the prerender config from the snapshot JSON
 
-**Rationale:** TanStack Start's `autoStaticPathsDiscovery` covers only non-parameterized routes; `$slug` routes must be listed explicitly via `prerender.pages`. The slugs are already sitting in `src/content/data/*.json` when the config loads (the `prebuild` snapshot runs before `vite build`), so `vite.config.ts` imports the JSON and builds a concrete `pages` array:
+**Rationale:** TanStack Start's `autoStaticPathsDiscovery` covers only non-parameterized routes; `$slug` routes must be listed explicitly via the top-level `pages` option. The slugs are already sitting in `src/content/data/*.json` when the config loads (the `prebuild` snapshot runs before `vite build`), so `vite.config.ts` imports the JSON and builds a concrete `pages` array:
 
 ```ts
 import posts from "./src/content/data/posts.json";
 import projects from "./src/content/data/projects.json";
 
+pages: [
+  ...posts.map((p) => `/blog/${p.slug}`),
+  ...projects.map((p) => `/portfolio/${p.slug}`),
+  // photography/$slug paths deferred until the detail-routes change adds the route file
+],
+
 prerender: {
   enabled: true,
   autoStaticPathsDiscovery: true,
   autoSubfolderIndex: true,
-  pages: [
-    ...posts.map((p) => `/blog/${p.slug}`),
-    ...projects.map((p) => `/portfolio/${p.slug}`),
-    // photography/$slug paths deferred until the detail-routes change adds the route file
-  ],
 }
 ```
 
@@ -140,7 +141,7 @@ This is the migration-safe path: every existing page continues to work; Start ea
 - **[Risk] Build size grows dramatically with many slugs** → For 15-50 routes the output is sub-MB per page. If the site grows past ~200 slugs, the snapshot JSON grows and rebuild time matters — mitigation: defer to ISR at that point.
 - **[Risk] Snapshot drift between deploys if Ghost is updated during the snapshot window** → Snapshot is always fetched fresh at the start of `pnpm build`, so the same deploy sees a consistent point-in-time. The only race is "edited in Ghost during the snapshot", which Ghost's webhook ack can mitigate (wait for save before triggering Vercel rebuild).
 - **[Risk] Ghost CORS configuration needed for `pnpm dev:ghost`** → Documented in README. Build mode does not require runtime CORS.
-- **[Risk] Slug enumeration is config-time, not dev-time** → `prerender.pages` is only consulted during `vite build`. Mitigation: `pnpm dev` and `pnpm dev:ghost` continue to use TanStack Router's regular dynamic route matching, so dev behavior is unaffected.
+- **[Risk] Slug enumeration is config-time, not dev-time** → the top-level `pages` option is only consulted during `vite build`. Mitigation: `pnpm dev` and `pnpm dev:ghost` continue to use TanStack Router's regular dynamic route matching, so dev behavior is unaffected.
 - **[Risk] Lost randomized data fetch behavior** → `MockAdapter` returns static data today; no client-only randomness to worry about. Worth flagging if A/B tests or randomized featured content is added later.
 - **[Risk] Build environment needs egress to Ghost** → Vercel has unrestricted egress to the public internet by default. Self-hosted builds need network access configured.
 
