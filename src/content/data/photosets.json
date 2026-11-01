@@ -1,0 +1,16 @@
+[
+  {
+    "id": "photoset-1",
+    "slug": "coastal-mornings",
+    "title": "Coastal mornings",
+    "excerpt": "A series of long-exposure shots from the Oregon coast.",
+    "content": "<p>Placeholder photo set description</p>",
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "location": "Oregon, USA",
+    "camera": "Fujifilm X-T5",
+    "images": [],
+    "tags": [
+      "photography"
+    ]
+  }
+]

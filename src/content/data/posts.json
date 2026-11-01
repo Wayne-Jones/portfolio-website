@@ -1,0 +1,40 @@
+[
+  {
+    "id": "post-1",
+    "slug": "designing-for-the-quiet-web",
+    "title": "Designing for the quiet web",
+    "excerpt": "Notes on visual hierarchy, restraint, and the studio-craft aesthetic.",
+    "content": "<p>This is placeholder blog content. The real Ghost adapter will replace this when <code>VITE_CMS=ghost</code> is set</p>",
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "readingTime": 4,
+    "tags": [
+      "design",
+      "essays"
+    ]
+  },
+  {
+    "id": "post-2",
+    "slug": "on-type-systems",
+    "title": "On type systems",
+    "excerpt": "Why Switzer + Inter pair well, and how fluid type scales beat rigid breakpoints.",
+    "content": "<p>Placeholder content for the second blog post</p>",
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "readingTime": 6,
+    "tags": [
+      "typography"
+    ]
+  },
+  {
+    "id": "post-3",
+    "slug": "building-with-restraint",
+    "title": "Building with restraint",
+    "excerpt": "Why the best interfaces often say the least, and how constraints breed creativity.",
+    "content": "<p>Placeholder content for the third blog post</p>",
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "readingTime": 5,
+    "tags": [
+      "design",
+      "craft"
+    ]
+  }
+]
