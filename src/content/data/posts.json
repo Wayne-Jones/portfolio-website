@@ -7,10 +7,7 @@
     "content": "<p>This is placeholder blog content. The real Ghost adapter will replace this when <code>VITE_CMS=ghost</code> is set</p>",
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "readingTime": 4,
-    "tags": [
-      "design",
-      "essays"
-    ]
+    "tags": ["design", "essays"]
   },
   {
     "id": "post-2",
@@ -20,9 +17,7 @@
     "content": "<p>Placeholder content for the second blog post</p>",
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "readingTime": 6,
-    "tags": [
-      "typography"
-    ]
+    "tags": ["typography"]
   },
   {
     "id": "post-3",
@@ -32,9 +27,6 @@
     "content": "<p>Placeholder content for the third blog post</p>",
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "readingTime": 5,
-    "tags": [
-      "design",
-      "craft"
-    ]
+    "tags": ["design", "craft"]
   }
 ]

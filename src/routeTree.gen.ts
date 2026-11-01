@@ -8,13 +8,13 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as IndexRouteImport } from "./routes/index";
 import { Route as SplatRouteImport } from "./routes/$";
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as BlogSlugRouteImport } from "./routes/blog.$slug";
+import { Route as BlogIndexRouteImport } from "./routes/blog.index";
+import { Route as IndexRouteImport } from "./routes/index";
 import { Route as PhotographyRouteImport } from "./routes/photography";
 import { Route as PortfolioRouteImport } from "./routes/portfolio";
-import { Route as BlogIndexRouteImport } from "./routes/blog.index";
-import { Route as BlogSlugRouteImport } from "./routes/blog.$slug";
 import { Route as PortfolioSlugRouteImport } from "./routes/portfolio.$slug";
 
 const IndexRoute = IndexRouteImport.update({
@@ -92,14 +92,7 @@ export interface FileRouteTypes {
     | "/portfolio/$slug"
     | "/blog/";
   fileRoutesByTo: FileRoutesByTo;
-  to:
-    | "/"
-    | "/$"
-    | "/photography"
-    | "/portfolio"
-    | "/blog/$slug"
-    | "/portfolio/$slug"
-    | "/blog";
+  to: "/" | "/$" | "/photography" | "/portfolio" | "/blog/$slug" | "/portfolio/$slug" | "/blog";
   id:
     | "__root__"
     | "/"
@@ -182,9 +175,7 @@ const PortfolioRouteChildren: PortfolioRouteChildren = {
   PortfolioSlugRoute: PortfolioSlugRoute,
 };
 
-const PortfolioRouteWithChildren = PortfolioRoute._addFileChildren(
-  PortfolioRouteChildren,
-);
+const PortfolioRouteWithChildren = PortfolioRoute._addFileChildren(PortfolioRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -198,8 +189,9 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from "./router.tsx";
 import type { createStart } from "@tanstack/react-start";
+
+import type { getRouter } from "./router.tsx";
 declare module "@tanstack/react-start" {
   interface Register {
     ssr: true;

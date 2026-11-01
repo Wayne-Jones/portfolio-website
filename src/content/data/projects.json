@@ -10,10 +10,7 @@
     "client": "Northwind Studio",
     "year": 2025,
     "gallery": [],
-    "tags": [
-      "portfolio",
-      "web"
-    ]
+    "tags": ["portfolio", "web"]
   },
   {
     "id": "project-2",
@@ -26,10 +23,7 @@
     "client": "Halcyon Coffee Co.",
     "year": 2024,
     "gallery": [],
-    "tags": [
-      "portfolio",
-      "publishing"
-    ]
+    "tags": ["portfolio", "publishing"]
   },
   {
     "id": "project-3",
@@ -42,10 +36,7 @@
     "client": "Stone Mountain Vineyards",
     "year": 2024,
     "gallery": [],
-    "tags": [
-      "portfolio",
-      "ecommerce"
-    ]
+    "tags": ["portfolio", "ecommerce"]
   },
   {
     "id": "project-4",
@@ -58,9 +49,6 @@
     "client": "Lighthouse Journal",
     "year": 2023,
     "gallery": [],
-    "tags": [
-      "portfolio",
-      "editorial"
-    ]
+    "tags": ["portfolio", "editorial"]
   }
 ]
