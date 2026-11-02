@@ -13,7 +13,7 @@ The project SHALL select the active content adapter at module-load time based on
 - **THEN** `contentService` is an instance of `MockAdapter` returning placeholder data without any Ghost network access
 
 #### Scenario: Snapshot adapter is the default at production build
-- **WHEN** `VITE_CMS` is not set during `vite-react-ssg build` (`import.meta.env.DEV` is false)
+- **WHEN** `VITE_CMS` is not set during a production render pass (`import.meta.env.DEV` is false) — e.g. `vite build` with the Start prerender plugin
 - **THEN** `contentService` is an instance of a static adapter that reads from JSON files in `src/content/data/` and does not perform any runtime network access
 
 #### Scenario: Snapshot adapter is selected explicitly
@@ -22,7 +22,7 @@ The project SHALL select the active content adapter at module-load time based on
 
 ### Requirement: Static snapshot adapter implementation
 
-The project SHALL implement a `StaticAdapter` class that conforms to `ContentService` and resolves each method by reading the corresponding JSON file from `src/content/data/`. The static adapter SHALL be available both at build time (consumed by `vite-react-ssg`) and during browser navigation when a pre-rendered JSON payload accompanies the page.
+The project SHALL implement a `StaticAdapter` class that conforms to `ContentService` and resolves each method by reading the corresponding JSON file from `src/content/data/`. The static adapter SHALL be available both at build time (consumed by the TanStack Start prerender pass) and during browser navigation when a pre-rendered JSON payload accompanies the page.
 
 #### Scenario: Static adapter implements ContentService
 - **WHEN** inspecting the `StaticAdapter` class

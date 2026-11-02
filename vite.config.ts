@@ -1,21 +1,59 @@
-import { defineConfig } from "vite";
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
-import babel from "@rolldown/plugin-babel";
-import tailwindcss from "@tailwindcss/vite";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { readFileSync } from "node:fs";
 import path from "node:path";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import babel from "@rolldown/plugin-babel";
+import { defineConfig } from "vite";
+
+function readSlugs(filename: string): string[] {
+  const file = path.resolve(import.meta.dirname, "src/content/data", filename);
+  try {
+    const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    const entries: unknown[] = parsed;
+    const slugs: string[] = [];
+    for (const entry of entries) {
+      if (
+        typeof entry === "object" &&
+        entry !== null &&
+        "slug" in entry &&
+        typeof entry.slug === "string"
+      ) {
+        slugs.push(entry.slug);
+      }
+    }
+    return slugs;
+  } catch {
+    return [];
+  }
+}
+
+const dynamicPages = [
+  ...readSlugs("posts.json").map((slug) => ({ path: `/blog/${slug}` })),
+  ...readSlugs("projects.json").map((slug) => ({ path: `/portfolio/${slug}` })),
+];
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    // TanStack Router file-based routing — generates routeTree.gen.ts
-    // from the files in src/routes/. Must run before the React plugin.
-    tanstackRouter({
-      target: "react",
-      routesDirectory: "./src/routes",
-      generatedRouteTree: "./src/routeTree.gen.ts",
-      quoteStyle: "double",
-      semicolons: true,
+    // TanStack Start — must run before the React plugin. Handles file-based
+    // routing (generates routeTree.gen.ts from src/routes/) and the SSR/prerender pipeline.
+    tanstackStart({
+      prerender: {
+        enabled: true,
+        autoStaticPathsDiscovery: true,
+        autoSubfolderIndex: true,
+      },
+      pages: dynamicPages,
+      router: {
+        routesDirectory: "routes",
+        generatedRouteTree: "routeTree.gen.ts",
+        quoteStyle: "double",
+        semicolons: true,
+      },
     }),
     react(),
     babel({
@@ -29,7 +67,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
 });
