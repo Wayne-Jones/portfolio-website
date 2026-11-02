@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:ghost": "vite --mode ghost",
-    "snapshot": "node --env-file=.env scripts/snapshot-content.ts",
+    "snapshot": "node scripts/snapshot-content.ts",
     "prebuild": "pnpm snapshot",
     "build": "tsc -b && vite build",
     "format": "oxfmt --write src",

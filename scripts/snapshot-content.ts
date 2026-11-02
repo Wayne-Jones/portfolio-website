@@ -1,10 +1,20 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { existsSync, readFileSync } from "node:fs";
 
 import { GhostAdapter } from "../src/content/adapters/ghost.ts";
 import { MockAdapter } from "../src/content/adapters/mock.ts";
 import type { PhotoSet, Post, Project } from "../src/content/types.ts";
 
 const dataDirectory = new URL("../src/content/data/", import.meta.url);
+
+// Load .env if it exists, skip if missing (Vercel-friendly)
+const envPath = ".env";
+if (existsSync(envPath)) {
+  for (const line of readFileSync(envPath, "utf8").split("\n")) {
+    const [k, ...v] = line.split("=");
+    if (k && v.length) process.env[k] = v.join("=");
+  }
+}
 
 type SnapshotSource = {
   getPosts(): Promise<Post[]>;
