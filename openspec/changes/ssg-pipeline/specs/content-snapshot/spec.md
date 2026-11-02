@@ -4,7 +4,7 @@
 
 Define how the Ghost Content API state is captured into local JSON so that the build is self-contained, reproducible, and decoupled from Ghost's online availability at render time.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Snapshot script fetches all content types
 
