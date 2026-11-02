@@ -49,8 +49,8 @@ export default defineConfig({
       },
       pages: dynamicPages,
       router: {
-        routesDirectory: "./src/routes",
-        generatedRouteTree: "./src/routeTree.gen.ts",
+        routesDirectory: "routes",
+        generatedRouteTree: "routeTree.gen.ts",
         quoteStyle: "double",
         semicolons: true,
       },
