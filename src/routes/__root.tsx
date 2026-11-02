@@ -1,8 +1,14 @@
-import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  HeadContent,
+  Link,
+  Outlet,
+  Scripts,
+} from "@tanstack/react-router";
 
 // Import global styles — base resets + Tailwind v4 design tokens
-import "@/index.css";
 import "@/styles/globals.css";
+import "@/index.css";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -45,12 +51,18 @@ function RootLayout() {
         <div className="mx-auto flex min-h-dvh w-full max-w-[1920px] flex-col">
           <SiteHeader />
 
-          <main id="main" className="page-content flex-1 px-3 py-4" aria-label="Main content">
+          <main
+            id="main"
+            className="page-content flex-1 px-3 py-4"
+            aria-label="Main content"
+          >
             <Outlet />
           </main>
 
           <footer className="border-t border-t-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] p-3 text-sm text-muted">
-            <p className="m-0">&copy; {currentYear} Portfolio. All rights reserved.</p>
+            <p className="m-0">
+              &copy; {currentYear} Portfolio. All rights reserved.
+            </p>
           </footer>
         </div>
 
@@ -63,7 +75,10 @@ function RootLayout() {
 function SiteHeader() {
   return (
     <header className="flex items-center justify-between border-b border-b-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-3 py-2">
-      <Link to="/" className="font-display text-[1.25rem] font-semibold text-fg no-underline">
+      <Link
+        to="/"
+        className="font-display text-[1.25rem] font-semibold text-fg no-underline"
+      >
         Portfolio
       </Link>
       <nav aria-label="Primary">
