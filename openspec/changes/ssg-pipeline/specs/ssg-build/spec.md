@@ -4,7 +4,7 @@
 
 Define how the portfolio site is statically pre-rendered at build time, including dynamic route enumeration and orchestration of build-time content fetching.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Build script produces static HTML
 

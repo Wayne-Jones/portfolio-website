@@ -12,6 +12,10 @@ The project SHALL select the active content adapter at module-load time based on
 - **WHEN** `VITE_CMS` is not set during a Vite dev-server run (`import.meta.env.DEV` is true)
 - **THEN** `contentService` is an instance of `MockAdapter` returning placeholder data without any Ghost network access
 
+#### Scenario: Mock adapter is the fallback
+- **WHEN** `VITE_CMS` is not set
+- **THEN** `contentService` is an instance of a mock adapter returning placeholder data without any Ghost network access
+
 #### Scenario: Snapshot adapter is the default at production build
 - **WHEN** `VITE_CMS` is not set during a production render pass (`import.meta.env.DEV` is false) — e.g. `vite build` with the Start prerender plugin
 - **THEN** `contentService` is an instance of a static adapter that reads from JSON files in `src/content/data/` and does not perform any runtime network access
@@ -19,6 +23,8 @@ The project SHALL select the active content adapter at module-load time based on
 #### Scenario: Snapshot adapter is selected explicitly
 - **WHEN** `VITE_CMS=snapshot` (in any context, including dev)
 - **THEN** `contentService` is an instance of a static adapter that reads from `src/content/data/*.json`
+
+## ADDED Requirements
 
 ### Requirement: Static snapshot adapter implementation
 
