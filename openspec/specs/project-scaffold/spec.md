@@ -8,11 +8,11 @@ Define the foundational project structure, tooling, and configuration for the Vi
 
 ### Requirement: Vite + React + TypeScript project initialization
 
-The project SHALL be initialized as a Vite + React + TypeScript project at the repository root (`D:\Websites\portfolio-website`).
+The project SHALL be initialized as a Vite + React + TypeScript project at the repository root (`./portfolio-website`).
 
 #### Scenario: Project is runnable
 
-- **WHEN** `npm install && npm run dev` is executed
+- **WHEN** `pnpm install && pnpm dev` is executed
 - **THEN** a Vite dev server starts and serves a React application on localhost
 
 #### Scenario: TypeScript compilation succeeds
@@ -49,8 +49,8 @@ The project SHALL include `.gitignore`, `tsconfig.json`, `vite.config.ts`, and `
 
 #### Scenario: Dependencies are declared
 
-- **WHEN** `npm install` is executed
-- **THEN** all dependencies (vite, react, react-dom, typescript, @tanstack/react-router, tailwindcss, @fontsource/switzer, @fontsource/inter) are installed
+- **WHEN** `pnpm install` is executed
+- **THEN** all dependencies (vite, react, react-dom, typescript, @tanstack/react-router ^1.170, tailwindcss v4, @tailwindcss/vite ^4.3, @fontsource-variable/inter ^5.3, @fontsource/ibm-plex-mono ^5.3, zod ^4.6) are installed
 
 ### Requirement: Environment variable support
 
