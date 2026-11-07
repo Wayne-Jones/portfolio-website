@@ -145,6 +145,49 @@ To auto-rebuild when content changes in Ghost:
 Vercel rebuilds, the `prebuild` snapshot refreshes content, and the new static
 site deploys automatically.
 
+## Content Rendering
+
+Post bodies are stored as a canonical `ContentTree` (`src/content/types.ts`):
+an ordered array of discriminated block nodes (`paragraph`, `heading`, `image`,
+`codeBlock`, `blockquote`, `list`, `divider`, `embed`, `gallery`, `callout`,
+`bookmark`, `html`) with inline marks (`text`, `link`, `emphasis`, `strong`,
+`inlineCode`, `hardBreak`). Adapters translate their source format into this
+tree; `<PostBody />` (`src/components/content/PostBody.tsx`) is the only
+consumer.
+
+- `GhostAdapter` parses Ghost HTML with `parse5`
+  (`src/content/adapters/ghost-html-to-tree.ts`) and pre-computes Shiki
+  highlighting (`src/content/highlight.ts`) before returning the tree.
+- The renderer never imports Shiki or parse5, so neither reaches the client
+  bundle.
+- Unknown Ghost cards are preserved via the `{ type: "html" }` escape hatch and
+  sanitized with DOMPurify at render time.
+
+### Adding a new node type
+
+1. Add the variant to the `ContentBlock` union in `src/content/types.ts`.
+2. Translate it in `src/content/adapters/ghost-translate.ts` (fall back to
+   `{ type: "html" }` when the pattern is uncertain).
+3. Create a leaf component in `src/components/content/nodes/` that accepts the
+   typed node.
+4. Add a `case` for it in the `PostBody` dispatcher.
+5. Run `pnpm exec tsc -b` — the dispatcher's `default: never` assertion fails
+   until the new case exists.
+
+### Cloudinary images
+
+Set `VITE_CLOUDINARY_CLOUD_NAME` (see `.env.example`) to the Cloudinary cloud
+name used by post images. `FigureImage` detects URLs matching
+`res.cloudinary.com/<cloud-name>/image/upload/...` and emits a `srcset` with
+`c_scale,w_400|800|1200|1600` variants (the plain `src` uses the 1200px
+variant). When the variable is unset, or the URL points at a different cloud,
+images render with their original URL. `Gallery` renders each image through
+`FigureImage`, so galleries get the same treatment.
+
+Snapshots in `src/content/data/` are validated against the canonical types at
+module load (`src/content/validate.ts`), so a stale snapshot fails fast instead
+of reaching the renderer.
+
 ## Performance Optimization
 
 ### Image & Asset Management

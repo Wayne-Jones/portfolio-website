@@ -1,9 +1,10 @@
-import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
 
 import { GhostAdapter } from "../src/content/adapters/ghost.ts";
 import { MockAdapter } from "../src/content/adapters/mock.ts";
 import type { PhotoSet, Post, Project } from "../src/content/types.ts";
+import { parsePhotoSets, parsePosts, parseProjects } from "../src/content/validate.ts";
 
 const dataDirectory = new URL("../src/content/data/", import.meta.url);
 
@@ -35,7 +36,9 @@ function buildContentService(): SnapshotSource {
   return new MockAdapter();
 }
 
-async function writeJson(filename: string, data: unknown): Promise<void> {
+type SnapshotEntry = Post[] | Project[] | PhotoSet[];
+
+async function writeJson(filename: string, data: SnapshotEntry): Promise<void> {
   await mkdir(dataDirectory, { recursive: true });
   await writeFile(new URL(filename, dataDirectory), `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
@@ -48,16 +51,18 @@ export async function run(): Promise<void> {
     service.getPhotoSets(),
   ]);
 
-  await writeJson("posts.json", posts);
-  await writeJson("projects.json", projects);
-  await writeJson("photosets.json", photoSets);
+  // Validate before writing so a broken translation fails the build instead of
+  // committing a snapshot the static adapter will reject.
+  await writeJson("posts.json", parsePosts(posts));
+  await writeJson("projects.json", parseProjects(projects));
+  await writeJson("photosets.json", parsePhotoSets(photoSets));
 
   console.log(
     `Snapshot written: ${posts.length} posts, ${projects.length} projects, ${photoSets.length} photo sets -> src/content/data/`,
   );
 }
 
-run().catch((error: unknown) => {
+run().catch((error) => {
   console.error("Snapshot generation failed:", error);
   process.exitCode = 1;
 });

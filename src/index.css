@@ -94,7 +94,7 @@
   }
 }
 
-  @layer base {
+@layer base {
   p {
     margin: 0;
   }

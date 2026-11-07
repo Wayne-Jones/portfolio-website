@@ -4,7 +4,74 @@
     "slug": "designing-for-the-quiet-web",
     "title": "Designing for the quiet web",
     "excerpt": "Notes on visual hierarchy, restraint, and the studio-craft aesthetic.",
-    "content": "<p>This is placeholder blog content. The real Ghost adapter will replace this when <code>VITE_CMS=ghost</code> is set</p>",
+    "content": [
+      {
+        "type": "heading",
+        "level": 2,
+        "id": "the-quiet-web",
+        "children": [
+          {
+            "type": "text",
+            "value": "The quiet web"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "This is placeholder blog content that documents the canonical "
+          },
+          {
+            "type": "strong",
+            "children": [
+              {
+                "type": "text",
+                "value": "content tree"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "value": " shape. Read more in the "
+          },
+          {
+            "type": "link",
+            "href": "/blog",
+            "children": [
+              {
+                "type": "text",
+                "value": "writing index"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "value": " and check "
+          },
+          {
+            "type": "inlineCode",
+            "value": "VITE_CMS=ghost"
+          },
+          {
+            "type": "text",
+            "value": " for live content."
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "src": "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+        "alt": "A quiet studio desk",
+        "caption": "Placeholder image block"
+      },
+      {
+        "type": "codeBlock",
+        "language": "typescript",
+        "code": "const tree: ContentTree = [{ type: \"divider\" }];"
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "readingTime": 4,
     "tags": ["design", "essays"]
@@ -14,7 +81,17 @@
     "slug": "on-type-systems",
     "title": "On type systems",
     "excerpt": "Why Switzer + Inter pair well, and how fluid type scales beat rigid breakpoints.",
-    "content": "<p>Placeholder content for the second blog post</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder content for the second blog post"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "readingTime": 6,
     "tags": ["typography"]
@@ -24,7 +101,17 @@
     "slug": "building-with-restraint",
     "title": "Building with restraint",
     "excerpt": "Why the best interfaces often say the least, and how constraints breed creativity.",
-    "content": "<p>Placeholder content for the third blog post</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder content for the third blog post"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "readingTime": 5,
     "tags": ["design", "craft"]

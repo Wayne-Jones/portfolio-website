@@ -2,18 +2,20 @@ import photoSetsData from "@/content/data/photosets.json";
 import postsData from "@/content/data/posts.json";
 import projectsData from "@/content/data/projects.json";
 import type { ContentService, Photo, PhotoSet, Post, Project } from "@/content/types";
+import { parsePhotoSets, parsePosts, parseProjects } from "@/content/validate";
 
 /**
  * Static adapter — reads content from the committed snapshot JSON files.
  *
  * Used in production builds (default) and when `VITE_CMS=snapshot`.
  * Imports the JSON directly so the build bundles it; content is cached
- * in memory at module load.
+ * in memory at module load. Snapshots are validated against the canonical
+ * types so a stale/invalid snapshot fails fast instead of reaching the UI.
  */
 
-const cachedPosts = postsData as Post[];
-const cachedProjects = projectsData as Project[];
-const cachedPhotoSets = photoSetsData as PhotoSet[];
+const cachedPosts = parsePosts(postsData);
+const cachedProjects = parseProjects(projectsData);
+const cachedPhotoSets = parsePhotoSets(photoSetsData);
 
 export class StaticAdapter implements ContentService {
   getPosts(): Promise<Post[]> {
