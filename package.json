@@ -9,6 +9,7 @@
     "snapshot": "node scripts/snapshot-content.ts",
     "prebuild": "pnpm snapshot",
     "build": "tsc -b && vite build",
+    "test": "vitest run",
     "format": "oxfmt --write src",
     "format:check": "oxfmt --check src",
     "lint": "oxlint",
