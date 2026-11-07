@@ -37,6 +37,8 @@ The project SHALL implement a `GhostAdapter` class that conforms to `ContentServ
 - **WHEN** `GhostAdapter.getPosts()` is called
 - **THEN** Ghost's `feature_image` is mapped to `featureImage`, `published_at` to `publishedAt`, and the `html` body field is translated to `content` as a `ContentTree`
 
+## ADDED Requirements
+
 ### Requirement: Mock adapter implementation
 
 The project SHALL implement a `MockAdapter` class that conforms to `ContentService` and returns placeholder canonical types. The `content` field SHALL be a constructed `ContentTree` literal so the mock documents the canonical tree shape.

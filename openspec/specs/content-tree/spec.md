@@ -1,4 +1,4 @@
-# Content Tree
+# Content Tree Specification
 
 ## Purpose
 

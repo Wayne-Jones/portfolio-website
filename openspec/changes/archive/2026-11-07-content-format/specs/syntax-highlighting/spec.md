@@ -4,7 +4,7 @@
 
 Define how source code blocks in post bodies are rendered with syntax-highlighted styling, computed at build time inside the content adapter so the renderer never depends on a runtime highlighting library.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Highlighter runs at adapter scope
 
