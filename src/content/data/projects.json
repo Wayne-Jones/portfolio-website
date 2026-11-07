@@ -4,7 +4,17 @@
     "slug": "northwind-studio",
     "title": "Northwind Studio",
     "excerpt": "A brand site for an independent design studio.",
-    "content": "<p>Placeholder case study content</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "role": "Design + build",
     "client": "Northwind Studio",
@@ -17,7 +27,17 @@
     "slug": "halcyon-coffee",
     "title": "Halcyon Coffee",
     "excerpt": "A modular publishing system for a long-form journalism outlet.",
-    "content": "<p>Placeholder case study content</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "role": "Lead engineer",
     "client": "Halcyon Coffee Co.",
@@ -30,7 +50,17 @@
     "slug": "stone-mountain-wines",
     "title": "Stone Mountain Wines",
     "excerpt": "An e-commerce experience for a boutique vineyard.",
-    "content": "<p>Placeholder case study content</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "role": "Full-stack development",
     "client": "Stone Mountain Vineyards",
@@ -43,7 +73,17 @@
     "slug": "lighthouse-journal",
     "title": "Lighthouse Journal",
     "excerpt": "A digital home for an independent literary magazine.",
-    "content": "<p>Placeholder case study content</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "role": "Design + development",
     "client": "Lighthouse Journal",

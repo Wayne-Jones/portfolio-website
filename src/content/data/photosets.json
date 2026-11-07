@@ -4,11 +4,43 @@
     "slug": "coastal-mornings",
     "title": "Coastal mornings",
     "excerpt": "A series of long-exposure shots from the Oregon coast.",
-    "content": "<p>Placeholder photo set description</p>",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder photo set description"
+          }
+        ]
+      }
+    ],
     "publishedAt": "2026-01-01T00:00:00.000Z",
     "location": "Oregon, USA",
     "camera": "Fujifilm X-T5",
     "images": [],
     "tags": ["photography"]
+  },
+  {
+    "id": "photoset-2",
+    "slug": "urban-edges",
+    "title": "Urban edges",
+    "excerpt": "Contrasting textures of city architecture and natural elements.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder description for urban photography set"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "location": "Portland, OR",
+    "camera": "Sony A7IV",
+    "images": [],
+    "tags": ["photography", "city"]
   }
 ]

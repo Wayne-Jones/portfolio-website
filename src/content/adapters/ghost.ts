@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-import type { Author, ContentService, Photo, PhotoSet, Post, Project } from "@/content/types";
+import { highlightCodeBlocks } from "../highlight.ts";
+import type { Author, ContentService, Post, Project, PhotoSet, Photo } from "../types.ts";
+// Relative `.ts` specifiers keep this adapter runnable directly by Node's
+// type-stripping loader (used by scripts/snapshot-content.ts); Vite and tsc
+// resolve them identically.
+import { htmlToTree } from "./ghost-html-to-tree.ts";
 
 /**
  * Ghost adapter — maps Ghost Content API responses to canonical types.
@@ -114,28 +119,34 @@ function mapBasePost(post: GhostPost): Omit<Post, "content"> {
   };
 }
 
-function mapPost(post: GhostPost): Post {
+async function mapPost(post: GhostPost): Promise<Post> {
+  const tree = htmlToTree(post.html ?? "");
+  const highlighted = await highlightCodeBlocks(tree);
   return {
     ...mapBasePost(post),
-    content: post.html ?? "",
+    content: highlighted,
   };
 }
 
-function mapProject(post: GhostPost): Project {
+async function mapProject(post: GhostPost): Promise<Project> {
+  const tree = htmlToTree(post.html ?? "");
+  const highlighted = await highlightCodeBlocks(tree);
   return {
     ...mapBasePost(post),
-    content: post.html ?? "",
+    content: highlighted,
     role: post.role ?? undefined,
     client: post.client ?? undefined,
     year: post.year ?? undefined,
-    gallery: post.gallery ?? undefined,
+    gallery: post.gallery?.map((src) => ({ src, alt: "" })) ?? undefined,
   };
 }
 
-function mapPhotoSet(post: GhostPost): PhotoSet {
+async function mapPhotoSet(post: GhostPost): Promise<PhotoSet> {
+  const tree = htmlToTree(post.html ?? "");
+  const highlighted = await highlightCodeBlocks(tree);
   return {
     ...mapBasePost(post),
-    content: post.html ?? "",
+    content: highlighted,
     coverImage: post.feature_image ?? undefined,
     location: post.location ?? undefined,
     camera: post.camera ?? undefined,
@@ -177,11 +188,10 @@ export class GhostAdapter implements ContentService {
   }
 
   async getPosts(): Promise<Post[]> {
-    // Fetch a generous page and filter out portfolio/photography posts.
     const posts = await this.fetchPosts({ limit: "100" });
-    return posts
-      .filter((p) => !hasTag(p, PORTFOLIO_TAG) && !hasTag(p, PHOTOGRAPHY_TAG))
-      .map(mapPost);
+    return Promise.all(
+      posts.filter((p) => !hasTag(p, PORTFOLIO_TAG) && !hasTag(p, PHOTOGRAPHY_TAG)).map(mapPost),
+    );
   }
 
   async getPost(slug: string): Promise<Post | null> {
@@ -203,7 +213,7 @@ export class GhostAdapter implements ContentService {
       filter: `tag:${PORTFOLIO_TAG}`,
       limit: "100",
     });
-    return posts.map(mapProject);
+    return Promise.all(posts.map(mapProject));
   }
 
   async getProject(slug: string): Promise<Project | null> {
@@ -220,7 +230,7 @@ export class GhostAdapter implements ContentService {
       filter: `tag:${PHOTOGRAPHY_TAG}`,
       limit: "100",
     });
-    return posts.map(mapPhotoSet);
+    return Promise.all(posts.map(mapPhotoSet));
   }
 
   async getPhotoSet(slug: string): Promise<PhotoSet | null> {

@@ -1,4 +1,4 @@
-import type { ContentService, Photo, PhotoSet, Post, Project } from "@/content/types";
+import type { ContentService, Photo, PhotoSet, Post, Project } from "../types.ts";
 
 /**
  * Mock adapter — returns placeholder data for development.
@@ -6,6 +6,8 @@ import type { ContentService, Photo, PhotoSet, Post, Project } from "@/content/t
  * Used when `VITE_CMS` is unset or set to anything other than a
  * supported CMS name. Lets the UI run end-to-end without a real
  * Ghost instance.
+ *
+ * Updated to use canonical ContentTree literals for proper shape validation.
  */
 
 const now = "2026-01-01T00:00:00.000Z";
@@ -16,8 +18,37 @@ const mockPosts: Post[] = [
     slug: "designing-for-the-quiet-web",
     title: "Designing for the quiet web",
     excerpt: "Notes on visual hierarchy, restraint, and the studio-craft aesthetic.",
-    content:
-      "<p>This is placeholder blog content. The real Ghost adapter will replace this when <code>VITE_CMS=ghost</code> is set</p>",
+    content: [
+      {
+        type: "heading",
+        level: 2,
+        id: "the-quiet-web",
+        children: [{ type: "text", value: "The quiet web" }],
+      },
+      {
+        type: "paragraph",
+        children: [
+          { type: "text", value: "This is placeholder blog content that documents the canonical " },
+          { type: "strong", children: [{ type: "text", value: "content tree" }] },
+          { type: "text", value: " shape. Read more in the " },
+          { type: "link", href: "/blog", children: [{ type: "text", value: "writing index" }] },
+          { type: "text", value: " and check " },
+          { type: "inlineCode", value: "VITE_CMS=ghost" },
+          { type: "text", value: " for live content." },
+        ],
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+        alt: "A quiet studio desk",
+        caption: "Placeholder image block",
+      },
+      {
+        type: "codeBlock",
+        language: "typescript",
+        code: 'const tree: ContentTree = [{ type: "divider" }];',
+      },
+    ],
     featureImage: undefined,
     publishedAt: now,
     readingTime: 4,
@@ -28,7 +59,17 @@ const mockPosts: Post[] = [
     slug: "on-type-systems",
     title: "On type systems",
     excerpt: "Why Switzer + Inter pair well, and how fluid type scales beat rigid breakpoints.",
-    content: "<p>Placeholder content for the second blog post</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [
+          {
+            type: "text",
+            value: "Placeholder content for the second blog post",
+          },
+        ],
+      },
+    ],
     publishedAt: now,
     readingTime: 6,
     tags: ["typography"],
@@ -38,7 +79,17 @@ const mockPosts: Post[] = [
     slug: "building-with-restraint",
     title: "Building with restraint",
     excerpt: "Why the best interfaces often say the least, and how constraints breed creativity.",
-    content: "<p>Placeholder content for the third blog post</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [
+          {
+            type: "text",
+            value: "Placeholder content for the third blog post",
+          },
+        ],
+      },
+    ],
     publishedAt: now,
     readingTime: 5,
     tags: ["design", "craft"],
@@ -51,7 +102,12 @@ const mockProjects: Project[] = [
     slug: "northwind-studio",
     title: "Northwind Studio",
     excerpt: "A brand site for an independent design studio.",
-    content: "<p>Placeholder case study content</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [{ type: "text", value: "Placeholder case study content" }],
+      },
+    ],
     publishedAt: now,
     role: "Design + build",
     client: "Northwind Studio",
@@ -64,7 +120,12 @@ const mockProjects: Project[] = [
     slug: "halcyon-coffee",
     title: "Halcyon Coffee",
     excerpt: "A modular publishing system for a long-form journalism outlet.",
-    content: "<p>Placeholder case study content</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [{ type: "text", value: "Placeholder case study content" }],
+      },
+    ],
     publishedAt: now,
     role: "Lead engineer",
     client: "Halcyon Coffee Co.",
@@ -77,7 +138,12 @@ const mockProjects: Project[] = [
     slug: "stone-mountain-wines",
     title: "Stone Mountain Wines",
     excerpt: "An e-commerce experience for a boutique vineyard.",
-    content: "<p>Placeholder case study content</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [{ type: "text", value: "Placeholder case study content" }],
+      },
+    ],
     publishedAt: now,
     role: "Full-stack development",
     client: "Stone Mountain Vineyards",
@@ -90,7 +156,12 @@ const mockProjects: Project[] = [
     slug: "lighthouse-journal",
     title: "Lighthouse Journal",
     excerpt: "A digital home for an independent literary magazine.",
-    content: "<p>Placeholder case study content</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [{ type: "text", value: "Placeholder case study content" }],
+      },
+    ],
     publishedAt: now,
     role: "Design + development",
     client: "Lighthouse Journal",
@@ -106,13 +177,41 @@ const mockPhotoSets: PhotoSet[] = [
     slug: "coastal-mornings",
     title: "Coastal mornings",
     excerpt: "A series of long-exposure shots from the Oregon coast.",
-    content: "<p>Placeholder photo set description</p>",
+    content: [
+      {
+        type: "paragraph",
+        children: [{ type: "text", value: "Placeholder photo set description" }],
+      },
+    ],
     coverImage: undefined,
     publishedAt: now,
     location: "Oregon, USA",
     camera: "Fujifilm X-T5",
     images: [],
     tags: ["photography"],
+  },
+  {
+    id: "photoset-2",
+    slug: "urban-edges",
+    title: "Urban edges",
+    excerpt: "Contrasting textures of city architecture and natural elements.",
+    content: [
+      {
+        type: "paragraph",
+        children: [
+          {
+            type: "text",
+            value: "Placeholder description for urban photography set",
+          },
+        ],
+      },
+    ],
+    coverImage: undefined,
+    publishedAt: now,
+    location: "Portland, OR",
+    camera: "Sony A7IV",
+    images: [],
+    tags: ["photography", "city"],
   },
 ];
 
