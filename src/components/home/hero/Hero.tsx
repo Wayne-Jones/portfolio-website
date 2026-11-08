@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 function OutlineFilter() {
   return (
@@ -22,55 +22,85 @@ function OutlineFilter() {
   );
 }
 
-function useParallaxScroll() {
+function createParallaxController(
+  section: HTMLElement,
+  parallaxEl: HTMLDivElement,
+  rafRef: RefObject<number>,
+) {
+  let disposeScroll: (() => void) | undefined;
+
+  const update = () => {
+    const rect = section.getBoundingClientRect();
+    const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
+    parallaxEl.style.setProperty("--parallax-y", `${progress * 60}px`);
+  };
+
+  const onScroll = () => {
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(update);
+  };
+
+  const start = () => {
+    if (disposeScroll !== undefined) return;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    disposeScroll = () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
+  };
+
+  const stop = () => {
+    disposeScroll?.();
+    disposeScroll = undefined;
+    parallaxEl.style.removeProperty("--parallax-y");
+  };
+
+  return { start, stop };
+}
+
+function useParallaxScroll(sectionRef: RefObject<HTMLElement | null>) {
   const rafRef = useRef<number>(0);
   const parallaxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mqlReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const section = sectionRef.current;
     const parallaxEl = parallaxRef.current;
-    let dispose: (() => void) | undefined;
+    if (section === null || parallaxEl === null) return undefined;
 
-    if (!mqlReducedMotion.matches && parallaxEl) {
-      const mqlDesktop = window.matchMedia("(min-width: 64rem)");
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktopQuery = window.matchMedia("(min-width: 64rem)");
+    const controller = createParallaxController(section, parallaxEl, rafRef);
 
-      if (mqlDesktop.matches) {
-        const hero = document.querySelector("[data-slot='hero']");
-
-        if (hero) {
-          const update = () => {
-            const rect = hero.getBoundingClientRect();
-            const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
-            parallaxEl.style.setProperty("--parallax-y", `${progress * 60}px`);
-          };
-
-          const onScroll = () => {
-            cancelAnimationFrame(rafRef.current);
-            rafRef.current = requestAnimationFrame(update);
-          };
-
-          window.addEventListener("scroll", onScroll, { passive: true });
-          dispose = () => {
-            window.removeEventListener("scroll", onScroll);
-            cancelAnimationFrame(rafRef.current);
-          };
-        }
+    const sync = () => {
+      if (desktopQuery.matches && !motionQuery.matches) {
+        controller.start();
+      } else {
+        controller.stop();
       }
-    }
+    };
+
+    sync();
+    desktopQuery.addEventListener("change", sync);
+    motionQuery.addEventListener("change", sync);
 
     return () => {
-      dispose?.();
+      controller.stop();
+      desktopQuery.removeEventListener("change", sync);
+      motionQuery.removeEventListener("change", sync);
     };
-  }, []);
+  }, [sectionRef]);
 
   return parallaxRef;
 }
 
 export function Hero() {
-  const parallaxRef = useParallaxScroll();
+  const sectionRef = useRef<HTMLElement>(null);
+  const parallaxRef = useParallaxScroll(sectionRef);
 
   return (
     <section
+      ref={sectionRef}
       data-slot="hero"
       className="relative isolate flex flex-col items-center pt-4 pb-16 sm:px-4 sm:pt-8 sm:pb-24"
     >
