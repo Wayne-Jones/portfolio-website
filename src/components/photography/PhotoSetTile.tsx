@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import { TileMedia } from "@/components/photography/TileMedia";
 import type { PhotoSet } from "@/content/types";
+import { joinMetadata } from "@/lib/meta";
 
 interface PhotoSetTileProps {
   photoSet: PhotoSet;
@@ -10,9 +11,7 @@ interface PhotoSetTileProps {
 /** Masonry tile for one photo set; links to the set detail route. */
 export function PhotoSetTile({ photoSet }: PhotoSetTileProps) {
   const cover = photoSet.coverImage ?? photoSet.images[0];
-  const metadata = [photoSet.location, photoSet.camera]
-    .filter((part) => part !== undefined && part !== "")
-    .join(" · ");
+  const metadata = joinMetadata([photoSet.location, photoSet.camera]);
 
   return (
     <Link

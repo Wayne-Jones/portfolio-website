@@ -9,6 +9,7 @@ import { Gallery } from "@/components/content/nodes/Gallery";
 import { PostBody } from "@/components/content/PostBody";
 import { contentService } from "@/content";
 import type { GalleryImage } from "@/content/types";
+import { joinProjectMetadata } from "@/lib/meta";
 
 /**
  * Portfolio project route — renders a case study with project metadata, the
@@ -45,11 +46,7 @@ function PortfolioNotFound() {
 function PortfolioProject() {
   const project = Route.useLoaderData();
 
-  const metadata = [
-    project.role ?? "—",
-    project.client ?? "—",
-    project.year?.toString() ?? "—",
-  ].join(" · ");
+  const metadata = joinProjectMetadata(project);
   const hasMetadata =
     project.role !== undefined || project.client !== undefined || project.year !== undefined;
   const gallery = project.gallery ?? [];

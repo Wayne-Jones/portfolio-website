@@ -11,9 +11,9 @@
 
 ## 2. Shared listing and metadata
 
-- [ ] 2.1 Add `src/components/article/ListingPage.tsx` for the eyebrow/title/description, grid, empty message, and pagination; rewrite `BlogListing` and `PortfolioListing` to use it; verify tests cover headings, cards, empty state, and pagination for both
-- [ ] 2.2 Add `joinMetadata(parts)` in `src/lib/meta.ts` and use it in `PhotoSetTile` and `photography.$slug`; verify a test covers location-only, camera-only, both, and neither
-- [ ] 2.3 Move the portfolio role/client/year placeholder join into a named helper and use it in `portfolio.$slug`; verify the rendered metadata is unchanged
+- [x] 2.1 Add `src/components/article/ListingPage.tsx` for the eyebrow/title/description, grid, empty message, and pagination; rewrite `BlogListing` and `PortfolioListing` to use it; verify tests cover headings, cards, empty state, and pagination for both
+- [x] 2.2 Add `joinMetadata(parts)` in `src/lib/meta.ts` and use it in `PhotoSetTile` and `photography.$slug`; verify a test covers location-only, camera-only, both, and neither
+- [x] 2.3 Move the portfolio role/client/year placeholder join into a named helper and use it in `portfolio.$slug`; verify the rendered metadata is unchanged
 
 ## 3. Error handling and client hooks
 

@@ -8,6 +8,7 @@ import { TagChips } from "@/components/article/TagChips";
 import { FigureImage } from "@/components/content/nodes/FigureImage";
 import { PostBody } from "@/components/content/PostBody";
 import { contentService } from "@/content";
+import { joinMetadata } from "@/lib/meta";
 
 /**
  * Photo set route — renders the set metadata, optional cover, canonical body,
@@ -47,9 +48,7 @@ function PhotoSetNotFound() {
 function PhotoSetDetail() {
   const photoSet = Route.useLoaderData();
 
-  const metadata = [photoSet.location, photoSet.camera]
-    .filter((part) => part !== undefined && part !== "")
-    .join(" · ");
+  const metadata = joinMetadata([photoSet.location, photoSet.camera]);
 
   return (
     <ArticleLayout

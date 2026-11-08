@@ -12,7 +12,7 @@ import type { Photo, Post, Project } from "@/content/types";
 export const Route = createFileRoute("/")({
   loader: () => {
     return {
-      projects: defer(contentService.getFeaturedProjects(4)),
+      projects: defer(contentService.getRecentProjects(4)),
       photos: defer(contentService.getFeaturedPhotos(6)),
       posts: defer(contentService.getRecentPosts(3)),
     };
