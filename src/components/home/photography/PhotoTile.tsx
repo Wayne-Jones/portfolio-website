@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
+import { TileMedia } from "@/components/photography/TileMedia";
 import type { Photo } from "@/content/types";
 
 interface PhotoTileProps {
@@ -17,12 +18,12 @@ export function PhotoTile({ photo, index }: PhotoTileProps) {
 
   const content = (
     <>
-      <div className="overflow-hidden">
-        <div
-          className="bg-muted/10 transition-transform duration-500 group-hover:scale-[1.03]"
-          style={{ aspectRatio: aspectRatios[photo.aspect] }}
-        />
-      </div>
+      <TileMedia
+        src={photo.src}
+        alt={photo.alt}
+        aspect={photo.aspect}
+        sizes="(min-width: 768px) 33vw, 50vw"
+      />
       <span className="absolute inset-0 flex items-end p-3 text-xs text-bg opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         {photo.alt}
       </span>
@@ -49,9 +50,3 @@ export function PhotoTile({ photo, index }: PhotoTileProps) {
     </Link>
   );
 }
-
-const aspectRatios: Record<Photo["aspect"], string> = {
-  portrait: "3/4",
-  landscape: "4/3",
-  square: "1/1",
-};

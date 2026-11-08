@@ -19,14 +19,14 @@ Personal portfolio website for Wayne Jones — Software Engineer & Photographer 
 | `/blog` | Blog index (page 1) |
 | `/blog/page/:page` | Paginated blog index (page 2+) |
 | `/blog/:slug` | Individual blog post |
-| `/photography` | Photo set index — masonry gallery of sets (not implemented yet) |
+| `/photography` | Photo set index — masonry gallery of sets |
 | `/photography/:slug` | Individual photo set |
 | `/portfolio` | Work portfolio index (page 1) |
 | `/portfolio/page/:page` | Paginated portfolio index (page 2+) |
 | `/portfolio/:slug` | Individual project case study |
 
-The homepage (`/`) renders a preview masonry of featured photos, one per set,
-and each tile links to that set's `/photography/:slug` detail page.
+The homepage (`/`) renders a featured-photo preview, one per set; `/photography`
+lists every set as a masonry gallery.
 
 ## Pagination
 
