@@ -23,5 +23,5 @@
 
 ## 4. Archive
 
-- [ ] 4.1 Archive `build-hygiene`, syncing the `ssg-build` delta with the `openspec-sync-specs` workflow
-- [ ] 4.2 `pnpm exec openspec validate --specs --strict`
+- [x] 4.1 Archive `build-hygiene`, syncing the `ssg-build` delta with the `openspec-sync-specs` workflow
+- [x] 4.2 `pnpm exec openspec validate --specs --strict`
