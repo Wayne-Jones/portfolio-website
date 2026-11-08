@@ -38,7 +38,11 @@ const project: Project = {
 describe("BlogListing", () => {
   it("renders the heading, description, cards, and pagination", () => {
     const html = render(
-      <BlogListing posts={[post, { ...post, id: "post-2", slug: "second", title: "Second" }]} page={2} pageCount={3} />,
+      <BlogListing
+        posts={[post, { ...post, id: "post-2", slug: "second", title: "Second" }]}
+        page={2}
+        pageCount={3}
+      />,
     );
 
     expect(html).toContain("<h1");

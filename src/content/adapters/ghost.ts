@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { highlightCodeBlocks } from "../highlight.ts";
 import { buildFeaturedPhotos } from "../featured.ts";
+import { highlightCodeBlocks } from "../highlight.ts";
 import { sortByPublishedAtDesc } from "../sort.ts";
 import type { Author, ContentService, Post, Project, PhotoSet, Photo } from "../types.ts";
 // Relative `.ts` specifiers keep this adapter runnable directly by Node's

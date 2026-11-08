@@ -62,9 +62,9 @@ function ghostPost(id: string, slug: string, publishedAt: string, tags: string[]
 function stubGhostPosts(posts: unknown[]): void {
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () => ({
+    vi.fn(() => ({
       ok: true,
-      json: async () => ({ posts }),
+      json: () => ({ posts }),
     })),
   );
 }
@@ -78,9 +78,7 @@ describe("adapter ordering", () => {
     const adapter = new StaticAdapter();
 
     expect(await adapter.getPosts()).toEqual(sortByPublishedAtDesc(parsePosts(postsData)));
-    expect(await adapter.getProjects()).toEqual(
-      sortByPublishedAtDesc(parseProjects(projectsData)),
-    );
+    expect(await adapter.getProjects()).toEqual(sortByPublishedAtDesc(parseProjects(projectsData)));
     expect(await adapter.getPhotoSets()).toEqual(
       sortByPublishedAtDesc(parsePhotoSets(photoSetsData)),
     );
@@ -91,9 +89,7 @@ describe("adapter ordering", () => {
 
     expect(await adapter.getPosts()).toEqual(sortByPublishedAtDesc(shuffled(mockPosts)));
     expect(await adapter.getProjects()).toEqual(sortByPublishedAtDesc(shuffled(mockProjects)));
-    expect(await adapter.getPhotoSets()).toEqual(
-      sortByPublishedAtDesc(shuffled(mockPhotoSets)),
-    );
+    expect(await adapter.getPhotoSets()).toEqual(sortByPublishedAtDesc(shuffled(mockPhotoSets)));
   });
 
   it("GhostAdapter orders posts regardless of the API response order", async () => {

@@ -15,7 +15,7 @@ function photoSet(overrides: Partial<PhotoSet> & Pick<PhotoSet, "id" | "slug">):
   };
 }
 
-describe("buildFeaturedPhotos", () => {
+describe("buildFeaturedPhotos sources", () => {
   it("prefers the cover image", () => {
     const photos = buildFeaturedPhotos(
       [
@@ -43,11 +43,7 @@ describe("buildFeaturedPhotos", () => {
   it("falls back to the first image when the cover is missing or empty", () => {
     const photos = buildFeaturedPhotos(
       [
-        photoSet({
-          id: "1",
-          slug: "no-cover",
-          images: ["https://example.com/first.jpg"],
-        }),
+        photoSet({ id: "1", slug: "no-cover", images: ["https://example.com/first.jpg"] }),
         photoSet({
           id: "2",
           slug: "empty-cover",
@@ -63,17 +59,15 @@ describe("buildFeaturedPhotos", () => {
       "https://example.com/second.jpg",
     ]);
   });
+});
 
+describe("buildFeaturedPhotos selection", () => {
   it("skips sets with no usable image", () => {
     const photos = buildFeaturedPhotos(
       [
         photoSet({ id: "1", slug: "empty" }),
         photoSet({ id: "2", slug: "empty-first", images: [""] }),
-        photoSet({
-          id: "3",
-          slug: "usable",
-          images: ["https://example.com/usable.jpg"],
-        }),
+        photoSet({ id: "3", slug: "usable", images: ["https://example.com/usable.jpg"] }),
       ],
       6,
     );
@@ -104,8 +98,10 @@ describe("buildFeaturedPhotos", () => {
       "https://example.com/two-a.jpg",
     ]);
   });
+});
 
-  it("respects the limit", () => {
+describe("buildFeaturedPhotos limit", () => {
+  it("respects the limit and rejects non-positive values", () => {
     const sets = Array.from({ length: 5 }, (_, index) =>
       photoSet({
         id: String(index),
