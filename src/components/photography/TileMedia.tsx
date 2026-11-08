@@ -1,7 +1,9 @@
 import { useCloudinaryImage } from "@/components/content/lib/cloudinary";
-import type { Photo } from "@/content/types";
 
-const aspectRatios: Record<Photo["aspect"], string> = {
+/** Shared aspect ratio union for media frames across cards and tiles. */
+export type MediaAspect = "portrait" | "landscape" | "square";
+
+const aspectRatios: Record<MediaAspect, string> = {
   portrait: "3/4",
   landscape: "4/3",
   square: "1/1",
@@ -11,7 +13,7 @@ interface TileMediaProps {
   src: string | undefined;
   alt: string;
   /** Aspect ratio used for the placeholder when there is no source. */
-  aspect: Photo["aspect"];
+  aspect: MediaAspect;
   /** Responsive `sizes` hint; only used when the source emits a `srcset`. */
   sizes?: string;
 }

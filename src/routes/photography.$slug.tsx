@@ -54,6 +54,7 @@ function PhotoSetDetail() {
   return (
     <ArticleLayout
       breadcrumbs={[{ label: "Photography", to: "/photography" }]}
+      current={photoSet.title}
       header={
         <ArticleHeader
           title={photoSet.title}
@@ -68,7 +69,7 @@ function PhotoSetDetail() {
           image={
             photoSet.coverImage === undefined || photoSet.coverImage === ""
               ? undefined
-              : { src: photoSet.coverImage, alt: photoSet.title }
+              : { src: photoSet.coverImage, alt: "" }
           }
           imageTransitionName={`photo-${photoSet.slug}`}
           emptyImageFallback

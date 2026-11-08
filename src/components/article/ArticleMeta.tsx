@@ -1,5 +1,3 @@
-import { Link } from "@tanstack/react-router";
-
 import type { Author } from "@/content/types";
 import { formatMonthYear } from "@/lib/dates";
 import { cn } from "@/lib/utils";
@@ -47,13 +45,7 @@ export function ArticleMeta({ publishedAt, readingTime, author, className }: Art
                 className="size-6 rounded-full bg-muted/10 object-cover"
               />
             ) : null}
-            <Link
-              to="/blog"
-              title={`Posts by ${author.name}`}
-              className="text-muted no-underline hover:text-fg"
-            >
-              {author.name}
-            </Link>
+            <span className="text-muted">{author.name}</span>
           </span>
         </>
       )}

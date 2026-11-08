@@ -14,6 +14,8 @@ export type BreadcrumbItem = {
 interface ArticleLayoutProps {
   /** Trail shown above the article header. */
   breadcrumbs?: readonly BreadcrumbItem[];
+  /** Title of the current page, rendered as the final, non-link crumb. */
+  current?: string;
   /** Header slot (`<ArticleHeader />`). */
   header: ReactNode;
   /** Body slot (usually `<PostBody />`). */
@@ -27,6 +29,43 @@ interface ArticleLayoutProps {
   footerFullBleed?: boolean;
 }
 
+interface BreadcrumbsProps {
+  breadcrumbs: readonly BreadcrumbItem[];
+  current?: string;
+}
+
+function Breadcrumbs({ breadcrumbs, current }: BreadcrumbsProps) {
+  return (
+    <nav aria-label="Breadcrumb" className="mb-8">
+      <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-sm text-muted">
+        <li>
+          <Link to="/" activeOptions={{ exact: true }} className="no-underline hover:text-fg">
+            Home
+          </Link>
+        </li>
+        {breadcrumbs.map((crumb, index) => (
+          <li key={index} className="flex items-center gap-2">
+            <span aria-hidden="true">/</span>
+            <Link
+              to={crumb.to}
+              activeOptions={{ exact: true }}
+              className="no-underline hover:text-fg"
+            >
+              {crumb.label}
+            </Link>
+          </li>
+        ))}
+        {current === undefined || current === "" ? null : (
+          <li className="flex items-center gap-2">
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{current}</span>
+          </li>
+        )}
+      </ol>
+    </nav>
+  );
+}
+
 /**
  * Shared shell for blog posts and case studies.
  *
@@ -35,6 +74,7 @@ interface ArticleLayoutProps {
  */
 export function ArticleLayout({
   breadcrumbs,
+  current,
   header,
   children,
   footer,
@@ -44,23 +84,7 @@ export function ArticleLayout({
     <article className="w-full pb-16">
       <div className="mx-auto w-full max-w-3xl">
         {breadcrumbs !== undefined && breadcrumbs.length > 0 ? (
-          <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-sm text-muted">
-              <li>
-                <Link to="/" className="no-underline hover:text-fg">
-                  Home
-                </Link>
-              </li>
-              {breadcrumbs.map((crumb) => (
-                <li key={crumb.to} className="flex items-center gap-2">
-                  <span aria-hidden="true">/</span>
-                  <Link to={crumb.to} className="no-underline hover:text-fg">
-                    {crumb.label}
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <Breadcrumbs breadcrumbs={breadcrumbs} current={current} />
         ) : null}
 
         {header}

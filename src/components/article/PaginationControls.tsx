@@ -13,10 +13,10 @@ interface PaginationControlsProps {
 }
 
 const linkClassName =
-  "inline-flex min-w-9 items-center justify-center rounded-md border border-[color-mix(in_oklch,var(--color-fg)_12%,transparent)] px-3 py-1.5 text-sm text-fg no-underline transition-colors hover:bg-muted/10";
+  "inline-flex min-h-[44px] min-w-9 items-center justify-center rounded-md border border-[color-mix(in_oklch,var(--color-fg)_12%,transparent)] px-3 py-1.5 text-sm text-fg no-underline transition-colors hover:bg-muted/10";
 
 const currentClassName =
-  "inline-flex min-w-9 items-center justify-center rounded-md bg-accent px-3 py-1.5 text-sm font-semibold text-bg";
+  "inline-flex min-h-[44px] min-w-9 items-center justify-center rounded-md bg-accent px-3 py-1.5 text-sm font-semibold text-bg";
 
 /**
  * Previous / numeric / next pagination controls for listing pages.

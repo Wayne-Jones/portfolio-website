@@ -46,6 +46,7 @@ function BlogPost() {
   return (
     <ArticleLayout
       breadcrumbs={[{ label: "Blog", to: "/blog" }]}
+      current={post.title}
       header={
         <ArticleHeader
           title={post.title}
@@ -61,7 +62,7 @@ function BlogPost() {
           image={
             post.featureImage === undefined || post.featureImage === ""
               ? undefined
-              : { src: post.featureImage, alt: post.title }
+              : { src: post.featureImage, alt: "" }
           }
           imageTransitionName={`blog-${post.slug}`}
         />

@@ -28,7 +28,7 @@ export function BlogListing({ posts, page, pageCount }: BlogListingProps) {
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <BlogCard key={post.id} post={post} />
+            <BlogCard key={post.id} post={post} headingLevel={2} />
           ))}
         </div>
       )}

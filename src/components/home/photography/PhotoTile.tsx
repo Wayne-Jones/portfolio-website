@@ -24,7 +24,10 @@ export function PhotoTile({ photo, index }: PhotoTileProps) {
         aspect={photo.aspect}
         sizes="(min-width: 768px) 33vw, 50vw"
       />
-      <span className="absolute inset-0 flex items-end p-3 text-xs text-bg opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 flex items-end p-3 text-xs text-bg opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+      >
         {photo.alt}
       </span>
     </>
