@@ -1,7 +1,6 @@
 import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
 
 // Import global styles — base resets + Tailwind v4 design tokens
-import "@/index.css";
 import "@/styles/globals.css";
 
 export const Route = createRootRoute({
