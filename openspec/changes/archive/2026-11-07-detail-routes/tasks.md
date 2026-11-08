@@ -63,11 +63,11 @@
 
 - [x] 9.1 Run `pnpm dev` and click through homepage → blog card → blog post: confirm full body renders
 - [x] 9.2 Run `pnpm dev` and click through homepage → work tile → portfolio page: confirm case-study layout
-- [ ] 9.3 Run `pnpm dev` and click through homepage → photo tile → photo set: confirm full image grid — blocked: committed `photosets.json` has empty `images[]`/no cover, so the homepage renders skeletons; tile hrefs and `photo-<slug>` names are type-checked, the `/photography/$slug` grid renders in the build
-- [ ] 9.4 Run `pnpm dev` and navigate to `/blog/page/2`: confirm only blog-tagged posts are listed and pagination controls work — blocked: snapshot has 3 posts with `pageSize = 12`, so page 2 does not exist; covered by `pagination` unit tests
+- [x] 9.3 Run `pnpm dev` and click through homepage → photo tile → photo set: confirm full image grid — verified with the enriched mock adapter and committed photo sets: homepage tiles link to `/photography/coastal-mornings` and `/photography/urban-edges` with unique `photo-<slug>` names, and each set renders six images in the full-bleed grid
+- [x] 9.4 Run `pnpm dev` and navigate to `/blog/page/2`: confirm only blog-tagged posts are listed and pagination controls work — verified with 15 mock posts: page 2 lists the remaining three posts, "previous" links to `/blog`, there is no next link, and `/blog/page/3` returns 404
 - [x] 9.5 Run `pnpm dev` and navigate to `/blog/this-does-not-exist`: confirmed `NotFound` component with HTTP 404 status (also `/blog/page/99` → 404, `/blog/page/1` → 307 to `/blog`)
 - [x] 9.6 Run `pnpm exec vite build` and verified `dist/client/blog/<slug>/index.html` for every snapshot slug (plus portfolio and photography detail pages)
-- [ ] 9.7 Run `pnpm build` and verify `dist/client/blog/page/2/index.html` exists when pagination requires a second page — blocked: snapshot has 3 posts with `pageSize = 12`; covered by `pagination` unit tests
+- [x] 9.7 Run `pnpm build` and verify `dist/client/blog/page/2/index.html` exists when pagination requires a second page — verified with a temporary 14-post snapshot: 28 pages prerendered including `dist/client/blog/page/2/index.html`, and both feeds picked up the extra entries; snapshot restored afterward (`pnpm exec vite build` used directly so `prebuild` → `pnpm snapshot` could not overwrite it)
 - [x] 9.8 Verified `sitemap.xml` and `rss.xml` exist in the build output and enumerate the static, detail, and feed entries
 - [x] 9.9 Ran `pnpm preview` against the build output and confirmed `/`, listings, detail pages, `sitemap.xml`, and `rss.xml` all serve prerendered HTML
 - [x] 9.10 `pnpm lint`, `pnpm format:check`, `pnpm test` (64 passing), `pnpm exec tsc -b`, and `pnpm exec vite build` all clean
