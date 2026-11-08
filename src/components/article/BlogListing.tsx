@@ -1,7 +1,7 @@
 import { BlogCard } from "@/components/home/blog/BlogCard";
 import type { Post } from "@/content/types";
 
-import { PaginationControls } from "./PaginationControls";
+import { ListingPage } from "./ListingPage";
 
 interface BlogListingProps {
   posts: Post[];
@@ -12,28 +12,18 @@ interface BlogListingProps {
 /** Paginated blog listing shared by `/blog` and `/blog/page/N`. */
 export function BlogListing({ posts, page, pageCount }: BlogListingProps) {
   return (
-    <section className="mx-auto w-full max-w-5xl pb-16">
-      <header className="mb-8">
-        <p className="mb-2 text-xs tracking-widest text-muted uppercase">Writing</p>
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-          Blog
-        </h1>
-        <p className="mt-3 max-w-[55ch] text-muted">
-          Essays on design, engineering, and the quiet web.
-        </p>
-      </header>
-
-      {posts.length === 0 ? (
-        <p className="text-muted">No posts yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <BlogCard key={post.id} post={post} headingLevel={2} />
-          ))}
-        </div>
-      )}
-
-      <PaginationControls basePath="/blog" page={page} pageCount={pageCount} />
-    </section>
+    <ListingPage
+      basePath="/blog"
+      eyebrow="Writing"
+      title="Blog"
+      description="Essays on design, engineering, and the quiet web."
+      emptyMessage="No posts yet."
+      items={posts}
+      getKey={(post) => post.id}
+      renderItem={(post) => <BlogCard post={post} headingLevel={2} />}
+      gridClassName="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+      page={page}
+      pageCount={pageCount}
+    />
   );
 }

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
-type ListingBasePath = "/blog" | "/portfolio";
+export type ListingBasePath = "/blog" | "/portfolio";
 
 interface PaginationControlsProps {
   /** Listing root, used to build page links. */

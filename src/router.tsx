@@ -1,6 +1,7 @@
 import { createRouter } from "@tanstack/react-router";
 import { flushSync } from "react-dom";
 
+import { RouteError } from "./components/article/RouteError";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
@@ -9,6 +10,7 @@ export function getRouter() {
     defaultPreload: "intent",
     defaultViewTransition: true,
     trailingSlash: "never",
+    defaultErrorComponent: RouteError,
   });
 
   router.startViewTransition = (fn: () => void) => {

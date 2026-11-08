@@ -1,6 +1,8 @@
 import { z } from "zod";
 
+import { buildFeaturedPhotos } from "../featured.ts";
 import { highlightCodeBlocks } from "../highlight.ts";
+import { sortByPublishedAtDesc } from "../sort.ts";
 import type { Author, ContentService, Post, Project, PhotoSet, Photo } from "../types.ts";
 // Relative `.ts` specifiers keep this adapter runnable directly by Node's
 // type-stripping loader (used by scripts/snapshot-content.ts); Vite and tsc
@@ -54,7 +56,6 @@ const GhostPostSchema = z.object({
   title: z.string(),
   html: z.string().nullable(),
   feature_image: z.string().nullable(),
-  featured: z.boolean(),
   visibility: z.string(),
   created_at: z.string(),
   updated_at: z.string().nullable(),
@@ -189,9 +190,10 @@ export class GhostAdapter implements ContentService {
 
   async getPosts(): Promise<Post[]> {
     const posts = await this.fetchPosts({ limit: "100" });
-    return Promise.all(
+    const mapped = await Promise.all(
       posts.filter((p) => !hasTag(p, PORTFOLIO_TAG) && !hasTag(p, PHOTOGRAPHY_TAG)).map(mapPost),
     );
+    return sortByPublishedAtDesc(mapped);
   }
 
   async getPost(slug: string): Promise<Post | null> {
@@ -213,7 +215,8 @@ export class GhostAdapter implements ContentService {
       filter: `tag:${PORTFOLIO_TAG}`,
       limit: "100",
     });
-    return Promise.all(posts.map(mapProject));
+    const mapped = await Promise.all(posts.map(mapProject));
+    return sortByPublishedAtDesc(mapped);
   }
 
   async getProject(slug: string): Promise<Project | null> {
@@ -230,7 +233,8 @@ export class GhostAdapter implements ContentService {
       filter: `tag:${PHOTOGRAPHY_TAG}`,
       limit: "100",
     });
-    return Promise.all(posts.map(mapPhotoSet));
+    const mapped = await Promise.all(posts.map(mapPhotoSet));
+    return sortByPublishedAtDesc(mapped);
   }
 
   async getPhotoSet(slug: string): Promise<PhotoSet | null> {
@@ -242,28 +246,14 @@ export class GhostAdapter implements ContentService {
     return post == null ? null : mapPhotoSet(post);
   }
 
-  async getFeaturedProjects(limit: number): Promise<Project[]> {
+  async getRecentProjects(limit: number): Promise<Project[]> {
     const projects = await this.getProjects();
     return projects.slice(0, limit);
   }
 
   async getFeaturedPhotos(limit: number): Promise<Photo[]> {
     const sets = await this.getPhotoSets();
-    const photos: Photo[] = [];
-    for (const set of sets) {
-      const cover = set.coverImage;
-      const src = cover !== undefined && cover !== "" ? cover : set.images[0];
-      if (src === undefined || src === "") continue;
-
-      photos.push({
-        src,
-        alt: set.title,
-        aspect: "landscape",
-        setSlug: set.slug,
-      });
-      if (photos.length >= limit) break;
-    }
-    return photos;
+    return buildFeaturedPhotos(sets, limit);
   }
 
   async getRecentPosts(limit: number): Promise<Post[]> {

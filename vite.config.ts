@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import babel from "@rolldown/plugin-babel";
@@ -9,32 +8,8 @@ import { defineConfig, loadEnv } from "vite";
 import type { PluginOption } from "vite";
 
 import { generateFeeds } from "./scripts/generate-feeds.ts";
+import { readSlugs } from "./scripts/read-slugs.ts";
 import { pageSize, paginationPaths } from "./src/content/pagination.ts";
-
-function readSlugs(filename: string): string[] {
-  const file = path.resolve(import.meta.dirname, "src/content/data", filename);
-  try {
-    const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
-    if (!Array.isArray(parsed)) {
-      return [];
-    }
-    const entries: unknown[] = parsed;
-    const slugs: string[] = [];
-    for (const entry of entries) {
-      if (
-        typeof entry === "object" &&
-        entry !== null &&
-        "slug" in entry &&
-        typeof entry.slug === "string"
-      ) {
-        slugs.push(entry.slug);
-      }
-    }
-    return slugs;
-  } catch {
-    return [];
-  }
-}
 
 const postSlugs = readSlugs("posts.json");
 const projectSlugs = readSlugs("projects.json");

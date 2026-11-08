@@ -1,22 +1,18 @@
-import { existsSync, readFileSync } from "node:fs";
 import { mkdir, rename, writeFile } from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 
 import { GhostAdapter } from "../src/content/adapters/ghost.ts";
 import { MockAdapter } from "../src/content/adapters/mock.ts";
+import { sortByPublishedAtDesc } from "../src/content/sort.ts";
 import type { PhotoSet, Post, Project } from "../src/content/types.ts";
 import { parsePhotoSets, parsePosts, parseProjects } from "../src/content/validate.ts";
+import { loadEnv } from "./load-env.ts";
 
 const dataDirectory = new URL("../src/content/data/", import.meta.url);
 
-// Load .env if it exists; skip if missing (Vercel-friendly).
-const envPath = ".env";
-if (existsSync(envPath)) {
-  for (const line of readFileSync(envPath, "utf8").split("\n")) {
-    const [k, ...v] = line.split("=");
-    // Real environment variables win over `.env` (same as dotenv defaults).
-    if (k && v.length && process.env[k] === undefined) process.env[k] = v.join("=");
-  }
-}
+// Load .env when present; real environment variables win. A malformed entry
+// throws before any snapshot file is written.
+loadEnv();
 
 type SnapshotMode = "ghost" | "snapshot" | "mock";
 
@@ -89,19 +85,23 @@ function buildContentService(mode: SnapshotMode, ghost: GhostConfig): SnapshotSo
  * Validate the full snapshot before writing, stage every file as `.tmp`, then
  * rename them into place so a failure cannot leave a mixed snapshot.
  */
-async function writeSnapshot(entries: SnapshotData): Promise<void> {
-  await mkdir(dataDirectory, { recursive: true });
+export async function writeSnapshot(
+  entries: SnapshotData,
+  directory: URL = dataDirectory,
+): Promise<void> {
+  await mkdir(directory, { recursive: true });
 
   const staged = await Promise.all(
     Object.entries(entries).map(async ([filename, data]) => {
-      const temp = new URL(`${filename}.tmp`, dataDirectory);
-      await writeFile(temp, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+      const sorted = sortByPublishedAtDesc<Post | Project | PhotoSet>(data);
+      const temp = new URL(`${filename}.tmp`, directory);
+      await writeFile(temp, `${JSON.stringify(sorted, null, 2)}\n`, "utf8");
       return { filename, temp };
     }),
   );
 
   await Promise.all(
-    staged.map(({ filename, temp }) => rename(temp, new URL(filename, dataDirectory))),
+    staged.map(({ filename, temp }) => rename(temp, new URL(filename, directory))),
   );
 }
 
@@ -138,10 +138,17 @@ export async function run(): Promise<void> {
   );
 }
 
-run().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(
-    `Snapshot generation failed; the committed snapshot was not regenerated.\n${message}`,
-  );
-  process.exitCode = 1;
-});
+function isMainModule(): boolean {
+  const entry = process.argv[1];
+  return entry !== undefined && import.meta.url === pathToFileURL(entry).href;
+}
+
+if (isMainModule()) {
+  run().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(
+      `Snapshot generation failed; the committed snapshot was not regenerated.\n${message}`,
+    );
+    process.exitCode = 1;
+  });
+}

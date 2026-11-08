@@ -1,6 +1,8 @@
 import photoSetsData from "@/content/data/photosets.json";
 import postsData from "@/content/data/posts.json";
 import projectsData from "@/content/data/projects.json";
+import { buildFeaturedPhotos } from "@/content/featured";
+import { sortByPublishedAtDesc } from "@/content/sort";
 import type { ContentService, Photo, PhotoSet, Post, Project } from "@/content/types";
 import { parsePhotoSets, parsePosts, parseProjects } from "@/content/validate";
 
@@ -13,9 +15,9 @@ import { parsePhotoSets, parsePosts, parseProjects } from "@/content/validate";
  * types so a stale/invalid snapshot fails fast instead of reaching the UI.
  */
 
-const cachedPosts = parsePosts(postsData);
-const cachedProjects = parseProjects(projectsData);
-const cachedPhotoSets = parsePhotoSets(photoSetsData);
+const cachedPosts = sortByPublishedAtDesc(parsePosts(postsData));
+const cachedProjects = sortByPublishedAtDesc(parseProjects(projectsData));
+const cachedPhotoSets = sortByPublishedAtDesc(parsePhotoSets(photoSetsData));
 
 export class StaticAdapter implements ContentService {
   getPosts(): Promise<Post[]> {
@@ -42,26 +44,12 @@ export class StaticAdapter implements ContentService {
     return Promise.resolve(cachedPhotoSets.find((p) => p.slug === slug) ?? null);
   }
 
-  getFeaturedProjects(limit: number): Promise<Project[]> {
+  getRecentProjects(limit: number): Promise<Project[]> {
     return Promise.resolve(cachedProjects.slice(0, limit));
   }
 
   getFeaturedPhotos(limit: number): Promise<Photo[]> {
-    const photos: Photo[] = [];
-    for (const set of cachedPhotoSets) {
-      const cover = set.coverImage;
-      const src = cover !== undefined && cover !== "" ? cover : set.images[0];
-      if (src === undefined || src === "") continue;
-
-      photos.push({
-        src,
-        alt: set.title,
-        aspect: "landscape",
-        setSlug: set.slug,
-      });
-      if (photos.length >= limit) break;
-    }
-    return Promise.resolve(photos);
+    return Promise.resolve(buildFeaturedPhotos(cachedPhotoSets, limit));
   }
 
   getRecentPosts(limit: number): Promise<Post[]> {

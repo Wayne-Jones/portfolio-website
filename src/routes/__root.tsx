@@ -28,8 +28,6 @@ export const Route = createRootRoute({
   component: RootLayout,
 });
 
-const currentYear = new Date().getFullYear();
-
 const navLinks = [
   { to: "/" as const, label: "Home" },
   { to: "/portfolio" as const, label: "Portfolio" },
@@ -106,7 +104,7 @@ function RouteAnnouncer() {
   return <output id="route-announcer" aria-live="polite" className="sr-only" />;
 }
 
-function RootLayout() {
+export function RootLayout() {
   return (
     <html lang="en">
       <head>
@@ -134,14 +132,26 @@ function RootLayout() {
             <Outlet />
           </main>
 
-          <footer className="border-t border-t-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-(--page-gutter) py-3 text-sm text-muted">
-            <p className="m-0">&copy; {currentYear} Portfolio. All rights reserved.</p>
-          </footer>
+          <SiteFooter />
         </div>
 
         <Scripts />
       </body>
     </html>
+  );
+}
+
+/** Reads the year when called; kept outside render so the value is fresh. */
+function getCurrentYear(): number {
+  return new Date().getFullYear();
+}
+
+/** Computed at render so a long-lived dev server does not freeze the year. */
+export function SiteFooter() {
+  return (
+    <footer className="border-t border-t-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-(--page-gutter) py-3 text-sm text-muted">
+      <p className="m-0">&copy; {getCurrentYear()} Portfolio. All rights reserved.</p>
+    </footer>
   );
 }
 

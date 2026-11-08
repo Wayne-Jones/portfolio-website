@@ -1,9 +1,11 @@
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
+
+import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
 
 export function useRevealRef() {
   const ref = useRef<HTMLElement>(null);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const el = ref.current;
     let dispose: (() => void) | undefined;
 

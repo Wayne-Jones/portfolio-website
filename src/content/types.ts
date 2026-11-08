@@ -193,7 +193,7 @@ export interface ContentService {
   getPhotoSets(): Promise<PhotoSet[]>;
   getPhotoSet(slug: string): Promise<PhotoSet | null>;
 
-  getFeaturedProjects(limit: number): Promise<Project[]>;
+  getRecentProjects(limit: number): Promise<Project[]>;
   getFeaturedPhotos(limit: number): Promise<Photo[]>;
   getRecentPosts(limit: number): Promise<Post[]>;
 }
