@@ -18,5 +18,5 @@
 
 ## 4. Archive
 
-- [ ] 4.1 Archive `spec-reconciliation` so the deltas merge into `openspec/specs/`
-- [ ] 4.2 `pnpm exec openspec validate --specs --strict`
+- [x] 4.1 Archive `spec-reconciliation` so the deltas merge into `openspec/specs/`
+- [x] 4.2 `pnpm exec openspec validate --specs --strict`
