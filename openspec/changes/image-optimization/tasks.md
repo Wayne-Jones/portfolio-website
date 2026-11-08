@@ -1,51 +1,52 @@
-## 1. Hook Refactor
+## 0. Artifact Correction
 
-- [ ] 1.1 Create or extend `src/components/content/lib/cloudinary.ts` to host `useCloudinaryImage(url, options)` hook
-- [ ] 1.2 Move Cloudinary URL transformation logic from `FigureImage` into the hook
-- [ ] 1.3 Detach the env-var lookup (`VITE_CLOUDINARY_CLOUD_NAME`) into a single helper that both the hook and `BackgroundImage` reuse
+- [x] 0.1 Correct the delta spec to use `w` descriptors, the `image` prop, and no fixed-hero-aspect premise
+- [x] 0.2 Drop the `BackgroundImage` scope (no CSS-background image contexts remain) and fold hero behavior into `FigureImage`
+- [x] 0.3 Re-align proposal, design, and tasks with the current `ArticleHeader` → `FigureImage` and `TileMedia` structure
+
+## 1. Cloudinary Helpers and Hook
+
+- [ ] 1.1 Add `CLOUDINARY_HERO_WIDTHS` (`400`, `800`, `1200`, `1600`, `2400`, `3200`) and a hero default width
+- [ ] 1.2 Add `f_auto,q_auto` to generated transform segments while keeping already-transformed URLs untouched
+- [ ] 1.3 Add `cloudinaryLqip(src)` for the `w_40,e_blur:1000,q_auto,f_auto` placeholder
+- [ ] 1.4 Add `HERO_IMAGE_SIZES` alongside `CONTENT_IMAGE_SIZES`
+- [ ] 1.5 Add `useCloudinaryImage(src, options)` returning `{ src, srcSet, sizes, lqip, isCloudinary }` and delegating to the pure helpers
 
 ## 2. FigureImage Extensions
 
-- [ ] 2.1 Add `priority?: boolean` prop to `FigureImage` (default false)
-- [ ] 2.2 Add `sizes?: string` prop to `FigureImage` for caller override, with sensible default
-- [ ] 2.3 When `priority` is true, emit `srcset` with widths `400, 800, 1200, 1600, 2400, 3200`; otherwise emit `400, 800, 1200, 1600`
-- [ ] 2.4 When `priority` is true, set `fetchPriority="high"`, `loading="eager"`, `decoding="sync"`; otherwise current behavior (lazy + async)
-- [ ] 2.5 Maintain backward-compatible default — existing callers see no behavior change
+- [ ] 2.1 Add `priority?: boolean`, `sizes?: string`, and `aspectRatio?: string` props (all optional; defaults unchanged)
+- [ ] 2.2 Emit the six-width hero srcset when `priority` is true and the four-width inline srcset otherwise
+- [ ] 2.3 Set `fetchPriority="high"`, `loading="eager"`, `decoding="sync"` for priority images; keep lazy/async for inline images
+- [ ] 2.4 Reserve layout from the node's `width`/`height`, or apply the `aspectRatio` override with `object-cover`
+- [ ] 2.5 Render the LQIP placeholder behind the real image for priority Cloudinary sources and remove it on load
+- [ ] 2.6 Keep the caption and the existing `<figure class="my-8">` structure
 
-## 3. HeroImage Component
+## 3. Consumers
 
-- [ ] 3.1 Create `src/components/content/nodes/HeroImage.tsx` exporting `<HeroImage node={...} aspect="..." alt="..." />`
-- [ ] 3.2 HeroImage takes a `ContentTree image` node and renders a wrapper with `aspect-ratio` styling from `aspect` prop
-- [ ] 3.3 Render the blur-up placeholder `<img>` first (tiny blurred Cloudinary variant)
-- [ ] 3.4 Render the real `<FigureImage priority={true}>` alongside with onload fades the placeholder out
-- [ ] 3.5 Use `useState` to track loaded state; `onLoad` clears placeholder
-- [ ] 3.6 Decide empty-alt fallback: if `node.alt` is empty, the wrapper gets `aria-hidden="true"` (decorative-only image)
+- [ ] 3.1 Pass `priority` and `HERO_IMAGE_SIZES` from `ArticleHeader` so blog, portfolio, and photo-set heroes opt in
+- [ ] 3.2 Switch `TileMedia` to the hook without changing lazy-loading or placeholder behavior
+- [ ] 3.3 Confirm the `blog-<slug>`, `work-tile-<slug>`, and `photo-<slug>` view transitions still resolve
 
-## 4. BackgroundImage Component
+## 4. Tests
 
-- [ ] 4.1 Create `src/components/content/nodes/BackgroundImage.tsx`
-- [ ] 4.2 Apply inline `style={{ backgroundImage: 'url(...)' }}` with optimized URL via the Cloudinary hook
-- [ ] 4.3 Add baseline `background-size: cover` and `background-position: center`
-- [ ] 4.4 Skip rendering when `src` is empty
+- [ ] 4.1 Update existing Cloudinary tests for the `f_auto,q_auto` token
+- [ ] 4.2 Add tests for the six hero widths, priority attributes, and hero `sizes` default
+- [ ] 4.3 Add tests for the LQIP placeholder (priority Cloudinary only) and non-Cloudinary fallbacks
+- [ ] 4.4 Add tests for the `aspectRatio` override and intrinsic width/height pass-through
 
-## 5. Detail Route Updates
+## 5. Verification
 
-- [ ] 5.1 Update blog detail (`blog.$slug.tsx`) hero: use `<HeroImage>` instead of plain `<img>` for the feature image
-- [ ] 5.2 Update portfolio detail hero: same
-- [ ] 5.3 Update photo set detail cover: same
-- [ ] 5.4 Verify the view-transition morph still works with the new wrapper
+- [ ] 5.1 `pnpm exec tsc -b`, `pnpm lint`, `pnpm format:check`, `pnpm test`
+- [ ] 5.2 `pnpm exec vite build` and inspect a prerendered detail page for hero `srcset`, `fetchpriority`, and the LQIP URL
+- [ ] 5.3 Confirm inline post images still emit four widths, lazy loading, and no placeholder
+- [ ] 5.4 Inspect a homepage/`/photography` tile to confirm `TileMedia` output is unchanged apart from format tokens
 
-## 6. Verification
+## 6. Documentation
 
-- [ ] 6.1 Run `pnpm lint` and `pnpm build` clean
-- [ ] 6.2 Run `pnpm preview` and inspect hero image elements in DevTools: confirm `srcset` for hero has 6 widths, `fetchpriority="high"` set
-- [ ] 6.3 Run `pnpm preview` and inspect an inline post image: confirm existing 4-width `srcset` still emitted, lazy loading still default
-- [ ] 6.4 Visual QA via Chrome DevTools: hero on detail page renders quickly with blur-up placeholder briefly visible
-- [ ] 6.5 Run a Lighthouse performance audit (or DevTools Performance) on a detail page; confirm LCP improves compared to the in-development no-optimization baseline
-- [ ] 6.6 Manually load the site on a 1x / 2x simulated device and verify the right `srcset` candidate loads
+- [ ] 6.1 Update the README Cloudinary section with the inline vs hero variant sets, `f_auto,q_auto`, and LQIP behavior
+- [ ] 6.2 Document `VITE_CLOUDINARY_CLOUD_NAME` and the Cloudinary free-tier note
 
-## 7. Documentation
+## 7. Archive
 
-- [ ] 7.1 Update README with the image-optimization strategy summary
-- [ ] 7.2 Document `VITE_CLOUDINARY_CLOUD_NAME` env var and how to obtain it
-- [ ] 7.3 Add a note in README about Cloudinary free-tier limits and when to migrate (e.g., to Ghost native CDN)
+- [ ] 7.1 Archive `image-optimization`, syncing the new capability into `openspec/specs/` with the `openspec-sync-specs` workflow
+- [ ] 7.2 `pnpm exec openspec validate --specs --strict`
