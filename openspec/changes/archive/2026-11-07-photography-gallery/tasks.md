@@ -17,5 +17,5 @@
 
 ## 4. Archive
 
-- [ ] 4.1 Archive `photography-gallery`, syncing the new capability into `openspec/specs/` with the `openspec-sync-specs` workflow
-- [ ] 4.2 `pnpm exec openspec validate --specs --strict`
+- [x] 4.1 Archive `photography-gallery`, syncing the new capability into `openspec/specs/` with the `openspec-sync-specs` workflow
+- [x] 4.2 `pnpm exec openspec validate --specs --strict`
