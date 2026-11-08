@@ -8,14 +8,18 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as SplatRouteImport } from "./routes/$";
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as BlogSlugRouteImport } from "./routes/blog.$slug";
-import { Route as BlogIndexRouteImport } from "./routes/blog.index";
 import { Route as IndexRouteImport } from "./routes/index";
+import { Route as SplatRouteImport } from "./routes/$";
+import { Route as BlogRouteImport } from "./routes/blog";
 import { Route as PhotographyRouteImport } from "./routes/photography";
 import { Route as PortfolioRouteImport } from "./routes/portfolio";
+import { Route as BlogIndexRouteImport } from "./routes/blog.index";
+import { Route as BlogSlugRouteImport } from "./routes/blog.$slug";
+import { Route as PortfolioIndexRouteImport } from "./routes/portfolio.index";
 import { Route as PortfolioSlugRouteImport } from "./routes/portfolio.$slug";
+import { Route as BlogPagePageRouteImport } from "./routes/blog.page.$page";
+import { Route as PortfolioPagePageRouteImport } from "./routes/portfolio.page.$page";
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
@@ -25,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const SplatRoute = SplatRouteImport.update({
   id: "/$",
   path: "/$",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const BlogRoute = BlogRouteImport.update({
+  id: "/blog",
+  path: "/blog",
   getParentRoute: () => rootRouteImport,
 } as any);
 const PhotographyRoute = PhotographyRouteImport.update({
@@ -38,79 +47,120 @@ const PortfolioRoute = PortfolioRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any);
 const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: "/blog/",
-  path: "/blog/",
-  getParentRoute: () => rootRouteImport,
+  id: "/",
+  path: "/",
+  getParentRoute: () => BlogRoute,
 } as any);
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: "/blog/$slug",
-  path: "/blog/$slug",
-  getParentRoute: () => rootRouteImport,
+  id: "/$slug",
+  path: "/$slug",
+  getParentRoute: () => BlogRoute,
+} as any);
+const PortfolioIndexRoute = PortfolioIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => PortfolioRoute,
 } as any);
 const PortfolioSlugRoute = PortfolioSlugRouteImport.update({
   id: "/$slug",
   path: "/$slug",
   getParentRoute: () => PortfolioRoute,
 } as any);
+const BlogPagePageRoute = BlogPagePageRouteImport.update({
+  id: "/page/$page",
+  path: "/page/$page",
+  getParentRoute: () => BlogRoute,
+} as any);
+const PortfolioPagePageRoute = PortfolioPagePageRouteImport.update({
+  id: "/page/$page",
+  path: "/page/$page",
+  getParentRoute: () => PortfolioRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/$": typeof SplatRoute;
+  "/blog": typeof BlogRouteWithChildren;
   "/photography": typeof PhotographyRoute;
   "/portfolio": typeof PortfolioRouteWithChildren;
   "/blog/$slug": typeof BlogSlugRoute;
   "/portfolio/$slug": typeof PortfolioSlugRoute;
   "/blog/": typeof BlogIndexRoute;
+  "/portfolio/": typeof PortfolioIndexRoute;
+  "/blog/page/$page": typeof BlogPagePageRoute;
+  "/portfolio/page/$page": typeof PortfolioPagePageRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/$": typeof SplatRoute;
   "/photography": typeof PhotographyRoute;
-  "/portfolio": typeof PortfolioRouteWithChildren;
   "/blog/$slug": typeof BlogSlugRoute;
   "/portfolio/$slug": typeof PortfolioSlugRoute;
   "/blog": typeof BlogIndexRoute;
+  "/portfolio": typeof PortfolioIndexRoute;
+  "/blog/page/$page": typeof BlogPagePageRoute;
+  "/portfolio/page/$page": typeof PortfolioPagePageRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/$": typeof SplatRoute;
+  "/blog": typeof BlogRouteWithChildren;
   "/photography": typeof PhotographyRoute;
   "/portfolio": typeof PortfolioRouteWithChildren;
   "/blog/$slug": typeof BlogSlugRoute;
   "/portfolio/$slug": typeof PortfolioSlugRoute;
   "/blog/": typeof BlogIndexRoute;
+  "/portfolio/": typeof PortfolioIndexRoute;
+  "/blog/page/$page": typeof BlogPagePageRoute;
+  "/portfolio/page/$page": typeof PortfolioPagePageRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
     | "/$"
+    | "/blog"
     | "/photography"
     | "/portfolio"
     | "/blog/$slug"
     | "/portfolio/$slug"
-    | "/blog/";
+    | "/blog/"
+    | "/portfolio/"
+    | "/blog/page/$page"
+    | "/portfolio/page/$page";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/$" | "/photography" | "/portfolio" | "/blog/$slug" | "/portfolio/$slug" | "/blog";
+  to:
+    | "/"
+    | "/$"
+    | "/photography"
+    | "/blog/$slug"
+    | "/portfolio/$slug"
+    | "/blog"
+    | "/portfolio"
+    | "/blog/page/$page"
+    | "/portfolio/page/$page";
   id:
     | "__root__"
     | "/"
     | "/$"
+    | "/blog"
     | "/photography"
     | "/portfolio"
     | "/blog/$slug"
     | "/portfolio/$slug"
-    | "/blog/";
+    | "/blog/"
+    | "/portfolio/"
+    | "/blog/page/$page"
+    | "/portfolio/page/$page";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   SplatRoute: typeof SplatRoute;
+  BlogRoute: typeof BlogRouteWithChildren;
   PhotographyRoute: typeof PhotographyRoute;
   PortfolioRoute: typeof PortfolioRouteWithChildren;
-  BlogSlugRoute: typeof BlogSlugRoute;
-  BlogIndexRoute: typeof BlogIndexRoute;
 }
 
 declare module "@tanstack/react-router" {
@@ -129,6 +179,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof SplatRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/blog": {
+      id: "/blog";
+      path: "/blog";
+      fullPath: "/blog";
+      preLoaderRoute: typeof BlogRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/photography": {
       id: "/photography";
       path: "/photography";
@@ -145,17 +202,24 @@ declare module "@tanstack/react-router" {
     };
     "/blog/": {
       id: "/blog/";
-      path: "/blog";
+      path: "/";
       fullPath: "/blog/";
       preLoaderRoute: typeof BlogIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
+      parentRoute: typeof BlogRoute;
     };
     "/blog/$slug": {
       id: "/blog/$slug";
-      path: "/blog/$slug";
+      path: "/$slug";
       fullPath: "/blog/$slug";
       preLoaderRoute: typeof BlogSlugRouteImport;
-      parentRoute: typeof rootRouteImport;
+      parentRoute: typeof BlogRoute;
+    };
+    "/portfolio/": {
+      id: "/portfolio/";
+      path: "/";
+      fullPath: "/portfolio/";
+      preLoaderRoute: typeof PortfolioIndexRouteImport;
+      parentRoute: typeof PortfolioRoute;
     };
     "/portfolio/$slug": {
       id: "/portfolio/$slug";
@@ -164,34 +228,66 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof PortfolioSlugRouteImport;
       parentRoute: typeof PortfolioRoute;
     };
+    "/blog/page/$page": {
+      id: "/blog/page/$page";
+      path: "/page/$page";
+      fullPath: "/blog/page/$page";
+      preLoaderRoute: typeof BlogPagePageRouteImport;
+      parentRoute: typeof BlogRoute;
+    };
+    "/portfolio/page/$page": {
+      id: "/portfolio/page/$page";
+      path: "/page/$page";
+      fullPath: "/portfolio/page/$page";
+      preLoaderRoute: typeof PortfolioPagePageRouteImport;
+      parentRoute: typeof PortfolioRoute;
+    };
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute;
+  BlogIndexRoute: typeof BlogIndexRoute;
+  BlogPagePageRoute: typeof BlogPagePageRoute;
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  BlogPagePageRoute: BlogPagePageRoute,
+};
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren);
+
 interface PortfolioRouteChildren {
   PortfolioSlugRoute: typeof PortfolioSlugRoute;
+  PortfolioIndexRoute: typeof PortfolioIndexRoute;
+  PortfolioPagePageRoute: typeof PortfolioPagePageRoute;
 }
 
 const PortfolioRouteChildren: PortfolioRouteChildren = {
   PortfolioSlugRoute: PortfolioSlugRoute,
+  PortfolioIndexRoute: PortfolioIndexRoute,
+  PortfolioPagePageRoute: PortfolioPagePageRoute,
 };
 
-const PortfolioRouteWithChildren = PortfolioRoute._addFileChildren(PortfolioRouteChildren);
+const PortfolioRouteWithChildren = PortfolioRoute._addFileChildren(
+  PortfolioRouteChildren,
+);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  BlogRoute: BlogRouteWithChildren,
   PhotographyRoute: PhotographyRoute,
   PortfolioRoute: PortfolioRouteWithChildren,
-  BlogSlugRoute: BlogSlugRoute,
-  BlogIndexRoute: BlogIndexRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>();
 
-import type { createStart } from "@tanstack/react-start";
-
 import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
 declare module "@tanstack/react-start" {
   interface Register {
     ssr: true;
