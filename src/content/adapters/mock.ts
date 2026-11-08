@@ -1,3 +1,5 @@
+import { buildFeaturedPhotos } from "../featured.ts";
+import { sortByPublishedAtDesc } from "../sort.ts";
 import type { ContentService, Photo, PhotoSet, Post, Project } from "../types.ts";
 import { mockPhotoSets } from "./mock-fixtures/photo-sets.ts";
 import { mockPosts } from "./mock-fixtures/posts.ts";
@@ -16,52 +18,43 @@ import { mockProjects } from "./mock-fixtures/projects.ts";
  */
 
 export class MockAdapter implements ContentService {
+  private readonly posts = sortByPublishedAtDesc(mockPosts);
+  private readonly projects = sortByPublishedAtDesc(mockProjects);
+  private readonly photoSets = sortByPublishedAtDesc(mockPhotoSets);
+
   getPosts(): Promise<Post[]> {
-    return Promise.resolve(mockPosts);
+    return Promise.resolve(this.posts);
   }
 
   getPost(slug: string): Promise<Post | null> {
-    return Promise.resolve(mockPosts.find((p) => p.slug === slug) ?? null);
+    return Promise.resolve(this.posts.find((p) => p.slug === slug) ?? null);
   }
 
   getProjects(): Promise<Project[]> {
-    return Promise.resolve(mockProjects);
+    return Promise.resolve(this.projects);
   }
 
   getProject(slug: string): Promise<Project | null> {
-    return Promise.resolve(mockProjects.find((p) => p.slug === slug) ?? null);
+    return Promise.resolve(this.projects.find((p) => p.slug === slug) ?? null);
   }
 
   getPhotoSets(): Promise<PhotoSet[]> {
-    return Promise.resolve(mockPhotoSets);
+    return Promise.resolve(this.photoSets);
   }
 
   getPhotoSet(slug: string): Promise<PhotoSet | null> {
-    return Promise.resolve(mockPhotoSets.find((p) => p.slug === slug) ?? null);
+    return Promise.resolve(this.photoSets.find((p) => p.slug === slug) ?? null);
   }
 
-  getFeaturedProjects(limit: number): Promise<Project[]> {
-    return Promise.resolve(mockProjects.slice(0, limit));
+  getRecentProjects(limit: number): Promise<Project[]> {
+    return Promise.resolve(this.projects.slice(0, limit));
   }
 
   getFeaturedPhotos(limit: number): Promise<Photo[]> {
-    const photos: Photo[] = [];
-    for (const set of mockPhotoSets) {
-      const src = set.coverImage ?? set.images[0];
-      if (src === undefined || src === "") continue;
-
-      photos.push({
-        src,
-        alt: set.title,
-        aspect: "landscape",
-        setSlug: set.slug,
-      });
-      if (photos.length >= limit) break;
-    }
-    return Promise.resolve(photos);
+    return Promise.resolve(buildFeaturedPhotos(this.photoSets, limit));
   }
 
   getRecentPosts(limit: number): Promise<Post[]> {
-    return Promise.resolve(mockPosts.slice(0, limit));
+    return Promise.resolve(this.posts.slice(0, limit));
   }
 }

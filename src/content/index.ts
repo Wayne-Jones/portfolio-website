@@ -54,8 +54,8 @@ class LazyGhostAdapter implements ContentService {
     return (await this.service()).getPhotoSet(slug);
   }
 
-  async getFeaturedProjects(limit: number) {
-    return (await this.service()).getFeaturedProjects(limit);
+  async getRecentProjects(limit: number) {
+    return (await this.service()).getRecentProjects(limit);
   }
 
   async getFeaturedPhotos(limit: number) {

@@ -2,12 +2,12 @@
 
 ## 1. Shared content helpers
 
-- [ ] 1.1 Add `src/content/sort.ts` with `sortByPublishedAtDesc` (ISO date, then slug, then id) and unit tests for newest-first, equal timestamps, and repeatability
-- [ ] 1.2 Add `src/content/featured.ts` with `buildFeaturedPhotos(sets, limit)` and unit tests for cover preference, first-image fallback, empty sets, one-per-set, and the limit
-- [ ] 1.3 Replace the three duplicated `getFeaturedPhotos` loops in `StaticAdapter`, `MockAdapter`, and `GhostAdapter` with the shared helper; verify the existing content tests pass
-- [ ] 1.4 Sort the collections returned by every adapter through `sortByPublishedAtDesc`; verify a shuffled fixture produces the same order in each adapter
-- [ ] 1.5 Rename `getFeaturedProjects` to `getRecentProjects` in `types.ts`, `index.ts`, all adapters, and the homepage loader; verify `grep -r getFeaturedProjects src` returns nothing and the homepage test still renders four projects
-- [ ] 1.6 Remove the unused `featured` field from the Ghost post schema and verify `pnpm exec tsc -b` passes
+- [x] 1.1 Add `src/content/sort.ts` with `sortByPublishedAtDesc` (ISO date, then slug, then id) and unit tests for newest-first, equal timestamps, and repeatability
+- [x] 1.2 Add `src/content/featured.ts` with `buildFeaturedPhotos(sets, limit)` and unit tests for cover preference, first-image fallback, empty sets, one-per-set, and the limit
+- [x] 1.3 Replace the three duplicated `getFeaturedPhotos` loops in `StaticAdapter`, `MockAdapter`, and `GhostAdapter` with the shared helper; verify the existing content tests pass
+- [x] 1.4 Sort the collections returned by every adapter through `sortByPublishedAtDesc`; verify a shuffled fixture produces the same order in each adapter
+- [x] 1.5 Rename `getFeaturedProjects` to `getRecentProjects` in `types.ts`, `index.ts`, all adapters, and the homepage loader; verify `grep -r getFeaturedProjects src` returns nothing and the homepage test still renders four projects
+- [x] 1.6 Remove the unused `featured` field from the Ghost post schema and verify `pnpm exec tsc -b` passes
 
 ## 2. Shared listing and metadata
 
