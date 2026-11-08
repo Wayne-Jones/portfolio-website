@@ -60,10 +60,13 @@ pnpm dev
 # Content API vars); `vite --mode ghost` loads it.
 pnpm dev:ghost
 
-# Refresh the committed content snapshot from Ghost
+# Refresh the committed content snapshot from Ghost (requires credentials)
 pnpm snapshot
 
-# Production build + static prerender (runs the snapshot first)
+# Refresh it from the mock fixtures instead (explicit opt-in)
+SNAPSHOT_SOURCE=mock pnpm snapshot
+
+# Production build + static prerender (the snapshot step runs first)
 pnpm build
 
 # Preview the built static site
@@ -147,13 +150,18 @@ Selection:
 The site is statically prerendered from a committed content snapshot so the
 build needs no runtime access to Ghost.
 
-1. `pnpm snapshot` fetches all posts/projects/photo sets from Ghost (when
-   `VITE_GHOST_URL` + `VITE_GHOST_CONTENT_API_KEY` are set) and writes
-   `src/content/data/{posts,projects,photosets}.json`. Without those env vars it
-   falls back to mock data.
-2. The snapshot is committed to git — rebuilds are deterministic and offline.
-3. `pnpm build` runs the snapshot automatically (`prebuild`), so a fresh Deploy
-   always gets the latest published content.
+1. `pnpm snapshot` fetches all posts/projects/photo sets from Ghost when
+   `VITE_GHOST_URL` + `VITE_GHOST_CONTENT_API_KEY` are set and writes
+   `src/content/data/{posts,projects,photosets}.json`.
+2. Without Ghost credentials the snapshot step keeps the committed files and
+   exits successfully, so local and preview builds stay offline and
+   deterministic. `SNAPSHOT_SOURCE=mock pnpm snapshot` is the explicit way to
+   regenerate the mock fixtures; `SNAPSHOT_SOURCE=snapshot` skips the fetch on
+   purpose. Setting only one Ghost variable is a configuration error.
+3. The snapshot is committed to git — rebuilds are deterministic and offline.
+4. `pnpm build` runs the snapshot step automatically. A configured Ghost fetch
+   failure fails the build without replacing the committed snapshot, so a
+   partial render never ships.
 
 ### Ghost → Vercel deploy hook
 
