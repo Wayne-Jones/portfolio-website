@@ -1,26 +1,73 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
+
+import { ArticleHeader } from "@/components/article/ArticleHeader";
+import { ArticleLayout } from "@/components/article/ArticleLayout";
+import { ArticleMeta } from "@/components/article/ArticleMeta";
+import { NotFound } from "@/components/article/NotFound";
+import { TagChips } from "@/components/article/TagChips";
+import { PostBody } from "@/components/content/PostBody";
+import { contentService } from "@/content";
 
 /**
- * Blog post route — placeholder.
- *
- * The `$slug` param will be used to fetch a single post from the
- * content adapter in a subsequent change.
+ * Blog post route — loads a single post from the content service and renders
+ * its header, metadata, tags, and canonical body.
  */
 export const Route = createFileRoute("/blog/$slug")({
+  loader: async ({ params }) => {
+    const post = await contentService.getPost(params.slug);
+    if (post === null) throw notFound();
+    return post;
+  },
+  head: ({ loaderData }) => {
+    const title = loaderData?.title;
+    return {
+      meta: [
+        { title: title === undefined ? "Post not found — Blog" : `${title} — Blog` },
+        { name: "description", content: loaderData?.excerpt ?? "" },
+      ],
+    };
+  },
+  notFoundComponent: BlogNotFound,
   component: BlogPost,
 });
 
+function BlogNotFound() {
+  return (
+    <NotFound
+      title="Post not found"
+      message="This post doesn't exist, or it may have been unpublished."
+    />
+  );
+}
+
 function BlogPost() {
-  const { slug } = Route.useParams();
+  const post = Route.useLoaderData();
 
   return (
-    <article>
-      <div
-        style={{ viewTransitionName: `blog-${slug}` }}
-        className="mb-6 aspect-4/3 w-full rounded-md bg-muted/10"
-      />
-      <h1 className="mb-2 text-3xl">Blog post</h1>
-      <p className="max-w-[40ch] text-muted">This post's content will load here.</p>
-    </article>
+    <ArticleLayout
+      breadcrumbs={[{ label: "Blog", to: "/blog" }]}
+      header={
+        <ArticleHeader
+          title={post.title}
+          eyebrow="Blog"
+          meta={
+            <ArticleMeta
+              publishedAt={post.publishedAt}
+              readingTime={post.readingTime}
+              author={post.author}
+            />
+          }
+          tags={<TagChips tags={post.tags} />}
+          image={
+            post.featureImage === undefined || post.featureImage === ""
+              ? undefined
+              : { src: post.featureImage, alt: post.title }
+          }
+          imageTransitionName={`blog-${post.slug}`}
+        />
+      }
+    >
+      <PostBody content={post.content} />
+    </ArticleLayout>
   );
 }

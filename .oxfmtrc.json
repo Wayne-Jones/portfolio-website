@@ -8,5 +8,5 @@
     "stylesheet": "src/styles/globals.css",
     "functions": ["cn"]
   },
-  "ignorePatterns": []
+  "ignorePatterns": ["src/routeTree.gen.ts"]
 }

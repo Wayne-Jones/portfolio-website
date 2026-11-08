@@ -1,18 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 /**
- * Photography route — placeholder.
- * Will list photo sets pulled from the content adapter.
+ * Photography layout — groups the listing page and the photo set detail route.
  */
 export const Route = createFileRoute("/photography")({
-  component: Photography,
+  component: PhotographyLayout,
 });
 
-function Photography() {
-  return (
-    <section>
-      <h1 className="mb-2 text-4xl">Photography</h1>
-      <p className="max-w-[40ch] text-muted">Photo sets coming soon.</p>
-    </section>
-  );
+function PhotographyLayout() {
+  return <Outlet />;
 }

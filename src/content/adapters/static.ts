@@ -47,14 +47,20 @@ export class StaticAdapter implements ContentService {
   }
 
   getFeaturedPhotos(limit: number): Promise<Photo[]> {
-    const photos: Photo[] = cachedPhotoSets
-      .flatMap((set) => set.images)
-      .slice(0, limit)
-      .map((src, i) => ({
+    const photos: Photo[] = [];
+    for (const set of cachedPhotoSets) {
+      const cover = set.coverImage;
+      const src = cover !== undefined && cover !== "" ? cover : set.images[0];
+      if (src === undefined || src === "") continue;
+
+      photos.push({
         src,
-        alt: `Photo from set ${i}`,
-        aspect: "landscape" as const,
-      }));
+        alt: set.title,
+        aspect: "landscape",
+        setSlug: set.slug,
+      });
+      if (photos.length >= limit) break;
+    }
     return Promise.resolve(photos);
   }
 

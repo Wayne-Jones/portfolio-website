@@ -32,36 +32,34 @@ The existing infrastructure (TanStack Router file-based routing, the ContentServ
 
 ## Decisions
 
-### Decision 1: Route enumeration via `getStaticPaths` on each dynamic route file
+### Decision 1: Route enumeration via TanStack Start `prerender.pages`
 
-**Rationale:** TanStack Router's file-based routing determines paths from filenames; static enumeration requires a separate hook at build time (`vite-react-ssg`'s `getStaticPaths` or `ssgOptions.includedRoutes`). Putting the enumeration in the route file keeps related logic colocated. The single aggregator in `vite.config.ts` calls `getStaticPaths()`-like exposure on each file in turn, in order:
+**Rationale:** TanStack Start prerenders from a concrete path list declared in `vite.config.ts` under `tanstackStart({ prerender: { enabled: true } })`. The aggregator reads the snapshot JSON files and produces `{ path }` entries for every detail route and pagination page:
 
-```
-  ssgOptions.includedRoutes = async (paths, routes) => {
-    const posts = (await import('@/content/data/posts.json')).default;
-    const projects = (await import('@/content/data/projects.json')).default;
-    const photosets = (await import('@/content/data/photosets.json')).default;
-    return [
-      ...paths,
-      ...posts.map(p => `/blog/${p.slug}`),
-      ...projects.map(p => `/portfolio/${p.slug}`),
-      ...photosets.map(p => `/photography/${p.slug}`),
-      ...paginate('/blog', posts.length, PAGE_SIZE),
-      ...paginate('/portfolio', projects.length, PAGE_SIZE),
-    ];
-  };
+```ts
+const dynamicPages = [
+  ...postSlugs.map((slug) => ({ path: `/blog/${slug}` })),
+  ...projectSlugs.map((slug) => ({ path: `/portfolio/${slug}` })),
+  ...photosetSlugs.map((slug) => ({ path: `/photography/${slug}` })),
+  ...paginationPaths("/blog", postSlugs.length, pageSize)
+    .slice(1)
+    .map((path) => ({ path })),
+  ...paginationPaths("/portfolio", projectSlugs.length, pageSize)
+    .slice(1)
+    .map((path) => ({ path })),
+];
 ```
 
-**Alternative considered:** Putting `getStaticPaths` directly on each route file as `export const getStaticPaths = ...`. Rejected because TanStack Router file-based routing doesn't have that hook (it's `vite-react-ssg`'s side); centralizing in `vite.config.ts` keeps the route files framework-pure.
+**Alternative considered:** Putting a `getStaticPaths`-style hook on each route file. Rejected — TanStack Router has no per-route static-path hook; centralizing the enumeration in `vite.config.ts` keeps route files framework-pure.
 
 ### Decision 2: `/blog/page/N` URL scheme
 
 **Rationale:** The scheme is `/blog`, `/blog/page/2`, `/blog/page/3`, ... up to the last page. Page 1 is `/blog` (no `/page/1`). 404 returns the editorial 404 page where appropriate.
 
 For TanStack Router file-based routing, this means:
-- `blog.tsx` — handles `/blog` (page 1)
-- `blog.page.$page.tsx` — handles `/blog/page/2`, `/blog/page/3`, ...
-- `blog.page.$page.tsx("layout")` not needed; each page is a complete route
+- `blog.tsx` — layout route for `/blog` (renders `<Outlet />`)
+- `blog.index.tsx` — page 1 at `/blog`
+- `blog.page.$page.tsx` — `/blog/page/2`, `/blog/page/3`, ...; `/blog/page/1` redirects to `/blog`
 
 This avoids query-string-based pagination (`?page=2`) and subdirectory-style (`/blog/2`) variants — `/blog/page/N` is the cleanest, most predictable scheme for both humans and crawlers.
 
@@ -91,29 +89,39 @@ This split lets future changes iterate on article layout without touching the re
 
 When `<PortfolioHero>`/`<BlogHero>`/`<PhotoSetHero>` mount, they apply the matching `viewTransitionName`. The morph remains intact and now morphs between content-bearing cards and content-bearing heroes.
 
-### Decision 6: 404 via TanStack Router `notFoundComponent` export
+### Decision 6: 404 via `throw notFound()` plus a per-route `notFoundComponent`
 
-**Rationale:** TanStack Router supports a per-route `notFoundComponent` option exported alongside the route. Detail routes export one that renders the editorial 404 page. Wildcards at the top of the route tree catch anything else.
+**Rationale:** Detail and pagination loaders `throw notFound()` when data or the page number does not resolve. TanStack Router then renders the route's `notFoundComponent` (the editorial 404 page) *and* responds with an HTTP 404 status. A catch-all `$.tsx` splat route reuses the same `<NotFound />` component for any unmatched URL.
 
 **Alternative considered:** TanStack Router's `notFoundMode: "root"` option, which places a 404 boundary above the entire route tree. Rejected — gives the same UX but losing the per-route `notFoundComponent` weakens clarity about where missing data was checked.
 
-### Decision 7: Sitemap + RSS generation in `onFinished`
+### Decision 7: Sitemap + RSS generation via a Vite `buildApp` plugin
 
-**Rationale:** `vite-react-ssg` runs an `onFinished(dir)` callback after all routes are written. We use it to:
-- Read the snapshot JSON files
-- Build a `sitemap.xml` and write it to the build output directory
-- Build an `rss.xml` (filtered to blog-tagged posts) and write it to the build output
+**Rationale:** TanStack Start has no `onFinished` callback. Feed generation therefore lives in a local Vite plugin (`feedsPlugin`) whose `buildApp` hook runs with `order: "post"` after the client and server bundles are written:
 
-The sitemap lists each static route, each blog slug, each portfolio slug, each photo set slug. RSS is a simple Atom-compatible XML feed with the 20 most recent post entries.
+```ts
+buildApp: {
+  order: "post",
+  handler() {
+    generateFeeds(path.join(distDirectory, "client"), siteUrl);
+    generateFeeds(distDirectory, siteUrl);
+    return Promise.resolve();
+  },
+}
+```
 
-**Alternative considered:** A separate post-build step. Rejected — `onFinished` gives us single-command reproducibility.
+`scripts/generate-feeds.ts` reads the snapshot JSON files and writes `sitemap.xml` plus `rss.xml`. The sitemap lists each static route, each blog slug, each portfolio slug, each photo set slug, and every non-first pagination page. RSS is an RSS 2.0 feed (`xmlns:dc`) of the 20 most recent posts, with the author emitted as `<dc:creator>` — RSS 2.0 has no `<author>` string element.
+
+Feed URLs need an absolute origin, which the browser bundle cannot supply at build time. `vite.config.ts` reads `SITE_URL` through `loadEnv(mode, process.cwd(), "")` (not just `VITE_*` vars) and passes it into `generateFeeds(outputDirectory, siteUrlOverride)`. Resolution order: explicit `SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → the canonical project domain.
+
+**Alternative considered:** A separate `postbuild` npm script. Rejected — the plugin keeps `vite build` a single reproducible command and cannot drift from the build output directory.
 
 ## Risks / Trade-offs
 
 - **[Risk] Layout work for 3 different route types** → Mitigation: share a single `<ArticleLayout>` wrapper that handles common cases (breadcrumbs, header, footer, max-width container); route-specific code is held loosely and only invoked at the per-route root.
 - **[Risk] Sitemap can list stale URLs across builds** → Mitigation: sitemap is generated from the snapshot every build, never cached. Adding a `lastmod` element would require per-content timestamps in the snapshot; deferred unless Ghost provides this.
-- **[Risk] RSS for blog content has no built-in author formatting** → Implementation uses `<author>` field from canonical `Post.author` when present.
-- **[Risk] Pagination dynamic routes may not be tested in dev mode** → Mitigation: TanStack Router matches `/blog/page/2` as a normal dynamic route in dev; `getStaticPaths` only runs at build time, so dev mode handles these routes transparently.
+- **[Risk] RSS for blog content has no built-in author formatting** → Implementation emits `<dc:creator>` from the canonical `Post.author` when present, inside an RSS 2.0 channel declaring `xmlns:dc`.
+- **[Risk] Pagination dynamic routes may not be tested in dev mode** → Mitigation: TanStack Router matches `/blog/page/2` as a normal dynamic route in dev; `prerender.pages` only supplies the path list at build time, so dev mode handles these routes transparently.
 - **[Risk] Detail page sizes can be large** → Each detail page is a full content tree render; the SSG HTML for a 5000-word post will be ~100-200 KB. Mitigation: the renderer defers CodeBlock images via lazy loading; Shiki highlighting is pre-computed at build.
 
 ## Migration Plan
@@ -122,9 +130,9 @@ The sitemap lists each static route, each blog slug, each portfolio slug, each p
 2. **Phase B: Article shell components** — `<ArticleLayout>`, `<ArticleHeader>`, `<ArticleMeta>`, `<TagChips>`, etc. Shared across detail routes.
 3. **Phase C: Detail routes** — flesh out `blog.$slug.tsx`, `portfolio.$slug.tsx`, `photography.$slug.tsx`.
 4. **Phase D: Pagination routes** — `blog.page.$page.tsx` and `portfolio.page.$page.tsx`.
-5. **Phase E: 404** — top-level 404 component, wired into each route via `notFoundComponent`.
-6. **Phase F: Build-config aggregation** — hook up `ssgOptions.includedRoutes` with all enumerations + pagination.
-7. **Phase G: sitemap.xml + rss.xml** — `onFinished` callback.
+5. **Phase E: 404** — `throw notFound()` in loaders, a per-route `notFoundComponent`, and a `$.tsx` catch-all reusing `<NotFound />`.
+6. **Phase F: Build-config aggregation** — hook up `tanstackStart({ prerender: { pages } })` with all detail-route and pagination enumerations.
+7. **Phase G: sitemap.xml + rss.xml** — `feedsPlugin` `buildApp` hook, with `SITE_URL` resolved via `loadEnv` in `vite.config.ts`.
 
 Rollback: detail routes revert to placeholders; listing pages revert to "Coming soon"; sitemap/RSS files stop being generated. No data layer changes.
 

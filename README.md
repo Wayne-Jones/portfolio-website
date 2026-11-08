@@ -16,11 +16,32 @@ Personal portfolio website for Wayne Jones — Software Engineer & Photographer 
 | Route | Description |
 |-------|-------------|
 | `/` | Homepage — hero, work portfolio, photography, recent posts, contact |
-| `/blog` | Blog index with pagination |
+| `/blog` | Blog index (page 1) |
+| `/blog/page/:page` | Paginated blog index (page 2+) |
 | `/blog/:slug` | Individual blog post |
 | `/photography` | Photography gallery (masonry) |
-| `/portfolio` | Work portfolio index |
+| `/photography/:slug` | Individual photo set |
+| `/portfolio` | Work portfolio index (page 1) |
+| `/portfolio/page/:page` | Paginated portfolio index (page 2+) |
 | `/portfolio/:slug` | Individual project case study |
+
+## Pagination
+
+Blog and portfolio listings show 12 items per page. Page 1 is the bare
+listing URL; later pages use `/blog/page/N` and `/portfolio/page/N`.
+`/blog/page/1` and `/portfolio/page/1` redirect to the canonical listing URL,
+and non-numeric or out-of-range page segments return HTTP 404. Route loaders
+slice the snapshot with `paginate` and `resolvePage` from
+`src/content/pagination.ts`. `vite.config.ts` enumerates every pagination path
+at build time, so each page is prerendered.
+
+## 404 handling
+
+Detail and pagination loaders `throw notFound()` when the slug or page does not
+resolve, so the response carries an HTTP 404 status while rendering the
+editorial `<NotFound />` from `src/components/article/NotFound.tsx` (wired
+through each route's `notFoundComponent`). The splat route `src/routes/$.tsx`
+reuses the same component for any URL that does not match a route.
 
 ## Getting Started
 
@@ -187,6 +208,17 @@ images render with their original URL. `Gallery` renders each image through
 Snapshots in `src/content/data/` are validated against the canonical types at
 module load (`src/content/validate.ts`), so a stale snapshot fails fast instead
 of reaching the renderer.
+
+## Sitemap and RSS
+
+Every build writes `sitemap.xml` and `rss.xml` into both `dist/` and
+`dist/client/` (the directory served in production). Generation runs in a
+custom Vite `buildApp` plugin (`feedsPlugin` in `vite.config.ts`) after TanStack
+Start finishes prerendering. `scripts/generate-feeds.ts` reads the committed
+snapshot and enumerates static routes, detail routes, and pagination pages; the
+RSS feed contains the 20 most recent posts. Absolute URLs use `SITE_URL` when
+set, otherwise `VERCEL_PROJECT_PRODUCTION_URL` on Vercel, then
+`https://waynejones.dev`.
 
 ## Performance Optimization
 
