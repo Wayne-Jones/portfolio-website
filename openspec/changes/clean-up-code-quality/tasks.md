@@ -17,32 +17,32 @@
 
 ## 3. Error handling and client hooks
 
-- [ ] 3.1 Add `src/components/article/RouteError.tsx` (message, retry, home link) and set `defaultErrorComponent` in `src/router.tsx`; verify a temporarily throwing route in dev shows the error page inside the site shell
-- [ ] 3.2 Add `src/lib/use-isomorphic-layout-effect.ts` and use it in `useRevealRef`; verify `pnpm build` emits no `useLayoutEffect` SSR warning and sections still reveal
-- [ ] 3.3 Refactor `useParallaxScroll` to use a section ref and desktop/reduced-motion media-query change listeners; verify resizing across 1024px starts and stops parallax without a reload
+- [x] 3.1 Add `src/components/article/RouteError.tsx` (message, retry, home link) and set `defaultErrorComponent` in `src/router.tsx`; verify a temporarily throwing route in dev shows the error page inside the site shell
+- [x] 3.2 Add `src/lib/use-isomorphic-layout-effect.ts` and use it in `useRevealRef`; verify `pnpm build` emits no `useLayoutEffect` SSR warning and sections still reveal
+- [x] 3.3 Refactor `useParallaxScroll` to use a section ref and desktop/reduced-motion media-query change listeners; verify resizing across 1024px starts and stops parallax without a reload
 
 ## 4. Build-time scripts
 
-- [ ] 4.1 Extract `readSlugs` into `scripts/read-slugs.ts` using `existsSync` plus thrown, file-named errors; wire it into `vite.config.ts`; verify tests cover missing (empty), malformed JSON (throws), and non-array root (throws)
-- [ ] 4.2 Extract `.env` loading into `scripts/load-env.ts` using `node:util` `parseEnv` with line validation and no-overwrite precedence; wire it into `scripts/snapshot-content.ts`; verify tests cover `=` in values, quotes, escapes, `export`, CRLF, empty values, precedence, and malformed lines
-- [ ] 4.3 Sort each array in `writeSnapshot` with the shared sort helper; verify two snapshots from shuffled input are byte-identical
-- [ ] 4.4 Run `SNAPSHOT_SOURCE=mock pnpm snapshot` and confirm the committed snapshot is intentionally updated in sorted order, then commit it
+- [x] 4.1 Extract `readSlugs` into `scripts/read-slugs.ts` using `existsSync` plus thrown, file-named errors; wire it into `vite.config.ts`; verify tests cover missing (empty), malformed JSON (throws), and non-array root (throws)
+- [x] 4.2 Extract `.env` loading into `scripts/load-env.ts` using `node:util` `parseEnv` with line validation and no-overwrite precedence; wire it into `scripts/snapshot-content.ts`; verify tests cover `=` in values, quotes, escapes, `export`, CRLF, empty values, precedence, and malformed lines
+- [x] 4.3 Sort each array in `writeSnapshot` with the shared sort helper; verify two snapshots from shuffled input are byte-identical
+- [x] 4.4 Run `SNAPSHOT_SOURCE=mock pnpm snapshot` and confirm the committed snapshot is intentionally updated in sorted order, then commit it
 
 ## 5. Dead code, dependencies, and docs
 
-- [ ] 5.1 Delete `src/components/ui/button.tsx`, `button-variants.ts`, and `card.tsx`; verify `grep -r "@/components/ui" src` returns nothing
-- [ ] 5.2 Remove `@base-ui/react`, `lucide-react`, and `@fontsource-variable/inter` from `package.json`, move `zod` to `devDependencies`, and add an `engines.node` floor; verify `pnpm install` and `pnpm build` succeed
-- [ ] 5.3 Remove unused scaffold assets from `src/assets/` (the Vite/React logos and the unused `hero.png`) after confirming no references; verify the build still resolves every asset
-- [ ] 5.4 Move the footer year inside `RootLayout` so it is computed at render; verify a test renders the current year and the value is not a module constant
-- [ ] 5.5 Update `README.md`: correct the stack/font sourcing, project tree (no `ui/`, new scripts, `.github`), lint description, AAA contrast, view-transition wording, and add the CI section
-- [ ] 5.6 Add `.github/workflows/ci.yml` running frozen install, lint, format check, `tsc -b`, test, and build with `SNAPSHOT_SOURCE=snapshot`; verify the same commands pass locally
+- [x] 5.1 Delete `src/components/ui/button.tsx`, `button-variants.ts`, and `card.tsx`; verify `grep -r "@/components/ui" src` returns nothing
+- [x] 5.2 Remove `@base-ui/react`, `lucide-react`, and `@fontsource-variable/inter` from `package.json`, move `zod` to `devDependencies`, and add an `engines.node` floor; verify `pnpm install` and `pnpm build` succeed
+- [x] 5.3 Remove unused scaffold assets from `src/assets/` (the Vite/React logos and the unused `hero.png`) after confirming no references; verify the build still resolves every asset
+- [x] 5.4 Move the footer year inside `RootLayout` so it is computed at render; verify a test renders the current year and the value is not a module constant
+- [x] 5.5 Update `README.md`: correct the stack/font sourcing, project tree (no `ui/`, new scripts, `.github`), lint description, AAA contrast, view-transition wording, and add the CI section
+- [x] 5.6 Add `.github/workflows/ci.yml` running frozen install, lint, format check, `tsc -b`, test, and build with `SNAPSHOT_SOURCE=snapshot`; verify the same commands pass locally
 
 ## 6. Integration verification
 
-- [ ] 6.1 Run `pnpm exec tsc -b`, `pnpm lint`, `pnpm format:check`, and `pnpm test`
-- [ ] 6.2 Run `pnpm build` and confirm the snapshot step, prerender, sitemap, and RSS all complete without network access
-- [ ] 6.3 Confirm homepage ordering is newest-first, `/photography` still lists every set, and the RSS feed's 20 posts are newest-first
-- [ ] 6.4 Confirm no route renders a blank page by triggering the error component once in dev
+- [x] 6.1 Run `pnpm exec tsc -b`, `pnpm lint`, `pnpm format:check`, and `pnpm test`
+- [x] 6.2 Run `pnpm build` and confirm the snapshot step, prerender, sitemap, and RSS all complete without network access
+- [x] 6.3 Confirm homepage ordering is newest-first, `/photography` still lists every set, and the RSS feed's 20 posts are newest-first
+- [x] 6.4 Confirm no route renders a blank page by triggering the error component once in dev
 
 ## Workflow follow-up
 
