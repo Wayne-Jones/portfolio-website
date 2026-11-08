@@ -1,28 +1,5 @@
 [
   {
-    "id": "project-1",
-    "slug": "northwind-studio",
-    "title": "Northwind Studio",
-    "excerpt": "A brand site for an independent design studio.",
-    "content": [
-      {
-        "type": "paragraph",
-        "children": [
-          {
-            "type": "text",
-            "value": "Placeholder case study content"
-          }
-        ]
-      }
-    ],
-    "publishedAt": "2026-01-01T00:00:00.000Z",
-    "role": "Design + build",
-    "client": "Northwind Studio",
-    "year": 2025,
-    "gallery": [],
-    "tags": ["portfolio", "web"]
-  },
-  {
     "id": "project-2",
     "slug": "halcyon-coffee",
     "title": "Halcyon Coffee",
@@ -44,6 +21,52 @@
     "year": 2024,
     "gallery": [],
     "tags": ["portfolio", "publishing"]
+  },
+  {
+    "id": "project-4",
+    "slug": "lighthouse-journal",
+    "title": "Lighthouse Journal",
+    "excerpt": "A digital home for an independent literary magazine.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "role": "Design + development",
+    "client": "Lighthouse Journal",
+    "year": 2023,
+    "gallery": [],
+    "tags": ["portfolio", "editorial"]
+  },
+  {
+    "id": "project-1",
+    "slug": "northwind-studio",
+    "title": "Northwind Studio",
+    "excerpt": "A brand site for an independent design studio.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "role": "Design + build",
+    "client": "Northwind Studio",
+    "year": 2025,
+    "gallery": [],
+    "tags": ["portfolio", "web"]
   },
   {
     "id": "project-3",
@@ -69,10 +92,10 @@
     "tags": ["portfolio", "ecommerce"]
   },
   {
-    "id": "project-4",
-    "slug": "lighthouse-journal",
-    "title": "Lighthouse Journal",
-    "excerpt": "A digital home for an independent literary magazine.",
+    "id": "project-5",
+    "slug": "fieldnotes-press",
+    "title": "Fieldnotes Press",
+    "excerpt": "A reading-first site for an independent nonfiction press.",
     "content": [
       {
         "type": "paragraph",
@@ -84,11 +107,263 @@
         ]
       }
     ],
-    "publishedAt": "2026-01-01T00:00:00.000Z",
+    "publishedAt": "2025-12-11T00:00:00.000Z",
+    "role": "Design + build",
+    "client": "Fieldnotes Press",
+    "year": 2025,
+    "gallery": [
+      {
+        "src": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
+        "alt": "Glass office tower seen from below"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1600&q=80",
+        "alt": "White concrete building facade"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1600&q=80",
+        "alt": "Angular modern architecture"
+      }
+    ],
+    "tags": ["portfolio", "publishing"]
+  },
+  {
+    "id": "project-6",
+    "slug": "alder-and-ash",
+    "title": "Alder & Ash",
+    "excerpt": "Brand and site for a small furniture workshop.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-11-27T00:00:00.000Z",
+    "role": "Brand + web",
+    "client": "Alder & Ash",
+    "year": 2025,
+    "gallery": [],
+    "tags": ["portfolio", "brand"]
+  },
+  {
+    "id": "project-7",
+    "slug": "tidepool-analytics",
+    "title": "Tidepool Analytics",
+    "excerpt": "A calm dashboard for messy environmental data.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-11-12T00:00:00.000Z",
+    "role": "Product design",
+    "client": "Tidepool",
+    "year": 2025,
+    "gallery": [],
+    "tags": ["portfolio", "product"]
+  },
+  {
+    "id": "project-8",
+    "slug": "marrow-studio",
+    "title": "Marrow Studio",
+    "excerpt": "A portfolio system for an architecture practice.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-10-29T00:00:00.000Z",
+    "role": "Design + build",
+    "client": "Marrow Studio",
+    "year": 2025,
+    "gallery": [
+      {
+        "src": "https://images.unsplash.com/photo-1470723710355-95304d8aece4?auto=format&fit=crop&w=1600&q=80",
+        "alt": "City street framed by buildings"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1600&q=80",
+        "alt": "Downtown street at dusk"
+      }
+    ],
+    "tags": ["portfolio", "architecture"]
+  },
+  {
+    "id": "project-9",
+    "slug": "cinder-coffee",
+    "title": "Cinder Coffee",
+    "excerpt": "A small-batch roaster's storefront and subscription flow.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-10-15T00:00:00.000Z",
+    "role": "Full-stack development",
+    "client": "Cinder Coffee Roasters",
+    "year": 2024,
+    "gallery": [],
+    "tags": ["portfolio", "ecommerce"]
+  },
+  {
+    "id": "project-10",
+    "slug": "grainline-design-system",
+    "title": "Grainline",
+    "excerpt": "A design system and documentation site for a fintech team.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-09-30T00:00:00.000Z",
+    "role": "Lead engineer",
+    "client": "Grainline",
+    "year": 2024,
+    "gallery": [],
+    "tags": ["portfolio", "design-system"]
+  },
+  {
+    "id": "project-11",
+    "slug": "harbor-light",
+    "title": "Harbor Light",
+    "excerpt": "A campaign site for a coastal preservation fund.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-09-16T00:00:00.000Z",
     "role": "Design + development",
-    "client": "Lighthouse Journal",
+    "client": "Harbor Light Fund",
+    "year": 2024,
+    "gallery": [],
+    "tags": ["portfolio", "nonprofit"]
+  },
+  {
+    "id": "project-12",
+    "slug": "fable-and-co",
+    "title": "Fable & Co.",
+    "excerpt": "A digital home for a children's book imprint.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-08-19T00:00:00.000Z",
+    "role": "Design + build",
+    "client": "Fable & Co.",
+    "year": 2024,
+    "gallery": [],
+    "tags": ["portfolio", "publishing"]
+  },
+  {
+    "id": "project-13",
+    "slug": "northstar-museum",
+    "title": "Northstar Museum",
+    "excerpt": "An exhibitions archive with a decade of programming.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-08-05T00:00:00.000Z",
+    "role": "Full-stack development",
+    "client": "Northstar Museum",
     "year": 2023,
     "gallery": [],
-    "tags": ["portfolio", "editorial"]
+    "tags": ["portfolio", "culture"]
+  },
+  {
+    "id": "project-14",
+    "slug": "ochre-kitchen",
+    "title": "Ochre Kitchen",
+    "excerpt": "Menus, reservations, and a very small content model.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-07-22T00:00:00.000Z",
+    "role": "Design + build",
+    "client": "Ochre Kitchen",
+    "year": 2023,
+    "gallery": [],
+    "tags": ["portfolio", "hospitality"]
+  },
+  {
+    "id": "project-15",
+    "slug": "signal-foundry",
+    "title": "Signal Foundry",
+    "excerpt": "Marketing site and docs for a developer tooling startup.",
+    "content": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "text",
+            "value": "Placeholder case study content"
+          }
+        ]
+      }
+    ],
+    "publishedAt": "2025-07-08T00:00:00.000Z",
+    "role": "Design + engineering",
+    "client": "Signal Foundry",
+    "year": 2023,
+    "gallery": [],
+    "tags": ["portfolio", "saas"]
   }
 ]
