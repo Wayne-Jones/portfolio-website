@@ -1,28 +1,10 @@
 import { Link } from "@tanstack/react-router";
 
 import type { Post } from "@/content/types";
+import { formatMonthYear } from "@/lib/dates";
 
 interface BlogCardProps {
   post: Post;
-}
-
-function formatDate(iso: string): string {
-  const date = new Date(iso);
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return `${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -40,7 +22,7 @@ export function BlogCard({ post }: BlogCardProps) {
         {post.title}
       </h3>
       <div className="mt-auto flex items-center gap-3 pt-4 text-sm text-muted">
-        <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+        <time dateTime={post.publishedAt}>{formatMonthYear(post.publishedAt)}</time>
         {post.readingTime != null && (
           <>
             <span aria-hidden="true">·</span>
