@@ -1,18 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { PhotoSetGallery } from "@/components/photography/PhotoSetGallery";
+import { contentService } from "@/content";
+
 /**
- * Photography index route — placeholder.
- * Will list photo sets pulled from the content adapter.
+ * Photography index — masonry gallery of every photo set.
  */
 export const Route = createFileRoute("/photography/")({
-  component: Photography,
+  loader: async () => ({ photoSets: await contentService.getPhotoSets() }),
+  head: () => ({
+    meta: [
+      { title: "Photography — Portfolio" },
+      { name: "description", content: "Photo sets from the archive." },
+    ],
+  }),
+  component: PhotographyIndex,
 });
 
-function Photography() {
-  return (
-    <section>
-      <h1 className="mb-2 text-4xl">Photography</h1>
-      <p className="max-w-[40ch] text-muted">Photo sets coming soon.</p>
-    </section>
-  );
+function PhotographyIndex() {
+  const { photoSets } = Route.useLoaderData();
+  return <PhotoSetGallery photoSets={photoSets} />;
 }
