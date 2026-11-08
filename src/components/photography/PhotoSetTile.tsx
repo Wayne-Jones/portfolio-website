@@ -25,7 +25,7 @@ export function PhotoSetTile({ photoSet }: PhotoSetTileProps) {
       <div className="overflow-hidden rounded-md bg-muted/10">
         <TileMedia
           src={cover}
-          alt={photoSet.title}
+          alt=""
           aspect="landscape"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         />
