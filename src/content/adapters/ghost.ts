@@ -249,14 +249,21 @@ export class GhostAdapter implements ContentService {
 
   async getFeaturedPhotos(limit: number): Promise<Photo[]> {
     const sets = await this.getPhotoSets();
-    return sets
-      .flatMap((set) => set.images)
-      .slice(0, limit)
-      .map((src, i) => ({
+    const photos: Photo[] = [];
+    for (const set of sets) {
+      const cover = set.coverImage;
+      const src = cover !== undefined && cover !== "" ? cover : set.images[0];
+      if (src === undefined || src === "") continue;
+
+      photos.push({
         src,
-        alt: `Photo from set ${i}`,
-        aspect: "landscape" as const,
-      }));
+        alt: set.title,
+        aspect: "landscape",
+        setSlug: set.slug,
+      });
+      if (photos.length >= limit) break;
+    }
+    return photos;
   }
 
   async getRecentPosts(limit: number): Promise<Post[]> {

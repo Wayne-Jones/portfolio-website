@@ -86,6 +86,12 @@ export interface Photo {
   src: string;
   alt: string;
   aspect: "portrait" | "landscape" | "square";
+  /**
+   * Slug of the photo set this image belongs to. Present when the photo was
+   * derived from a `PhotoSet`; used to link the tile to `/photography/$slug`
+   * and to match its `view-transition-name`.
+   */
+  setSlug?: string;
 }
 
 /** A photography set (a single shoot / gallery). */
