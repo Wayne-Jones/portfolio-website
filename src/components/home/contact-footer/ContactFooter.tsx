@@ -4,9 +4,9 @@ const mailtoHref =
 export function ContactFooter() {
   return (
     <section data-slot="contact-footer" className="flex flex-col items-center py-16 md:py-24">
-      <p className="mb-6 font-display text-[clamp(40px,8vw,96px)] leading-[0.95] font-black tracking-[-0.04em] text-fg">
+      <h2 className="mb-6 font-display text-[clamp(40px,8vw,96px)] leading-[0.95] font-black tracking-[-0.04em] text-fg">
         Let's work together
-      </p>
+      </h2>
       <a
         href={mailtoHref}
         className="font-display text-[clamp(24px,4vw,48px)] font-semibold text-accent no-underline transition-opacity duration-200 hover:opacity-80"

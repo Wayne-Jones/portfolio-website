@@ -29,7 +29,7 @@ export function PortfolioListing({ projects, page, pageCount }: PortfolioListing
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, index) => (
             <div key={project.id} className={index === 0 ? "sm:col-span-2 lg:col-span-2" : ""}>
-              <WorkTile project={project} />
+              <WorkTile project={project} headingLevel={2} />
             </div>
           ))}
         </div>

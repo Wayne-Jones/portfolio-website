@@ -77,7 +77,7 @@ export function Hero() {
       <OutlineFilter />
       <div className="w-full max-w-150">
         <p className="hero-entrance mb-6 text-center text-[clamp(20px,2.5vw,32px)] text-muted sm:mb-4">
-          👋 My Name is Wayne Jones and I am a...
+          <span aria-hidden="true">👋</span> My name is Wayne Jones and I am a...
         </p>
 
         <h1 className="hero-entrance text-center font-display text-[clamp(2rem,9vw,10.9rem)] leading-[0.95] font-black tracking-[-0.06em]">
