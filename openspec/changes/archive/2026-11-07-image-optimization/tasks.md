@@ -48,5 +48,5 @@
 
 ## 7. Archive
 
-- [ ] 7.1 Archive `image-optimization`, syncing the new capability into `openspec/specs/` with the `openspec-sync-specs` workflow
-- [ ] 7.2 `pnpm exec openspec validate --specs --strict`
+- [x] 7.1 Archive `image-optimization`, syncing the new capability into `openspec/specs/` with the `openspec-sync-specs` workflow
+- [x] 7.2 `pnpm exec openspec validate --specs --strict`
