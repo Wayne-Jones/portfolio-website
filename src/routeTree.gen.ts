@@ -16,6 +16,8 @@ import { Route as PhotographyRouteImport } from "./routes/photography";
 import { Route as PortfolioRouteImport } from "./routes/portfolio";
 import { Route as BlogIndexRouteImport } from "./routes/blog.index";
 import { Route as BlogSlugRouteImport } from "./routes/blog.$slug";
+import { Route as PhotographyIndexRouteImport } from "./routes/photography.index";
+import { Route as PhotographySlugRouteImport } from "./routes/photography.$slug";
 import { Route as PortfolioIndexRouteImport } from "./routes/portfolio.index";
 import { Route as PortfolioSlugRouteImport } from "./routes/portfolio.$slug";
 import { Route as BlogPagePageRouteImport } from "./routes/blog.page.$page";
@@ -56,6 +58,16 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: "/$slug",
   getParentRoute: () => BlogRoute,
 } as any);
+const PhotographyIndexRoute = PhotographyIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => PhotographyRoute,
+} as any);
+const PhotographySlugRoute = PhotographySlugRouteImport.update({
+  id: "/$slug",
+  path: "/$slug",
+  getParentRoute: () => PhotographyRoute,
+} as any);
 const PortfolioIndexRoute = PortfolioIndexRouteImport.update({
   id: "/",
   path: "/",
@@ -81,11 +93,13 @@ export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/$": typeof SplatRoute;
   "/blog": typeof BlogRouteWithChildren;
-  "/photography": typeof PhotographyRoute;
+  "/photography": typeof PhotographyRouteWithChildren;
   "/portfolio": typeof PortfolioRouteWithChildren;
   "/blog/$slug": typeof BlogSlugRoute;
+  "/photography/$slug": typeof PhotographySlugRoute;
   "/portfolio/$slug": typeof PortfolioSlugRoute;
   "/blog/": typeof BlogIndexRoute;
+  "/photography/": typeof PhotographyIndexRoute;
   "/portfolio/": typeof PortfolioIndexRoute;
   "/blog/page/$page": typeof BlogPagePageRoute;
   "/portfolio/page/$page": typeof PortfolioPagePageRoute;
@@ -93,10 +107,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/$": typeof SplatRoute;
-  "/photography": typeof PhotographyRoute;
   "/blog/$slug": typeof BlogSlugRoute;
+  "/photography/$slug": typeof PhotographySlugRoute;
   "/portfolio/$slug": typeof PortfolioSlugRoute;
   "/blog": typeof BlogIndexRoute;
+  "/photography": typeof PhotographyIndexRoute;
   "/portfolio": typeof PortfolioIndexRoute;
   "/blog/page/$page": typeof BlogPagePageRoute;
   "/portfolio/page/$page": typeof PortfolioPagePageRoute;
@@ -106,11 +121,13 @@ export interface FileRoutesById {
   "/": typeof IndexRoute;
   "/$": typeof SplatRoute;
   "/blog": typeof BlogRouteWithChildren;
-  "/photography": typeof PhotographyRoute;
+  "/photography": typeof PhotographyRouteWithChildren;
   "/portfolio": typeof PortfolioRouteWithChildren;
   "/blog/$slug": typeof BlogSlugRoute;
+  "/photography/$slug": typeof PhotographySlugRoute;
   "/portfolio/$slug": typeof PortfolioSlugRoute;
   "/blog/": typeof BlogIndexRoute;
+  "/photography/": typeof PhotographyIndexRoute;
   "/portfolio/": typeof PortfolioIndexRoute;
   "/blog/page/$page": typeof BlogPagePageRoute;
   "/portfolio/page/$page": typeof PortfolioPagePageRoute;
@@ -124,8 +141,10 @@ export interface FileRouteTypes {
     | "/photography"
     | "/portfolio"
     | "/blog/$slug"
+    | "/photography/$slug"
     | "/portfolio/$slug"
     | "/blog/"
+    | "/photography/"
     | "/portfolio/"
     | "/blog/page/$page"
     | "/portfolio/page/$page";
@@ -133,10 +152,11 @@ export interface FileRouteTypes {
   to:
     | "/"
     | "/$"
-    | "/photography"
     | "/blog/$slug"
+    | "/photography/$slug"
     | "/portfolio/$slug"
     | "/blog"
+    | "/photography"
     | "/portfolio"
     | "/blog/page/$page"
     | "/portfolio/page/$page";
@@ -148,8 +168,10 @@ export interface FileRouteTypes {
     | "/photography"
     | "/portfolio"
     | "/blog/$slug"
+    | "/photography/$slug"
     | "/portfolio/$slug"
     | "/blog/"
+    | "/photography/"
     | "/portfolio/"
     | "/blog/page/$page"
     | "/portfolio/page/$page";
@@ -159,7 +181,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   SplatRoute: typeof SplatRoute;
   BlogRoute: typeof BlogRouteWithChildren;
-  PhotographyRoute: typeof PhotographyRoute;
+  PhotographyRoute: typeof PhotographyRouteWithChildren;
   PortfolioRoute: typeof PortfolioRouteWithChildren;
 }
 
@@ -214,6 +236,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof BlogSlugRouteImport;
       parentRoute: typeof BlogRoute;
     };
+    "/photography/": {
+      id: "/photography/";
+      path: "/";
+      fullPath: "/photography/";
+      preLoaderRoute: typeof PhotographyIndexRouteImport;
+      parentRoute: typeof PhotographyRoute;
+    };
+    "/photography/$slug": {
+      id: "/photography/$slug";
+      path: "/$slug";
+      fullPath: "/photography/$slug";
+      preLoaderRoute: typeof PhotographySlugRouteImport;
+      parentRoute: typeof PhotographyRoute;
+    };
     "/portfolio/": {
       id: "/portfolio/";
       path: "/";
@@ -259,6 +295,20 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren);
 
+interface PhotographyRouteChildren {
+  PhotographySlugRoute: typeof PhotographySlugRoute;
+  PhotographyIndexRoute: typeof PhotographyIndexRoute;
+}
+
+const PhotographyRouteChildren: PhotographyRouteChildren = {
+  PhotographySlugRoute: PhotographySlugRoute,
+  PhotographyIndexRoute: PhotographyIndexRoute,
+};
+
+const PhotographyRouteWithChildren = PhotographyRoute._addFileChildren(
+  PhotographyRouteChildren,
+);
+
 interface PortfolioRouteChildren {
   PortfolioSlugRoute: typeof PortfolioSlugRoute;
   PortfolioIndexRoute: typeof PortfolioIndexRoute;
@@ -279,7 +329,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   BlogRoute: BlogRouteWithChildren,
-  PhotographyRoute: PhotographyRoute,
+  PhotographyRoute: PhotographyRouteWithChildren,
   PortfolioRoute: PortfolioRouteWithChildren,
 };
 export const routeTree = rootRouteImport
