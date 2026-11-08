@@ -1,4 +1,4 @@
-import { cloudinaryDefaultSrc, cloudinarySrcSet } from "@/components/content/lib/cloudinary";
+import { useCloudinaryImage } from "@/components/content/lib/cloudinary";
 import type { Photo } from "@/content/types";
 
 const aspectRatios: Record<Photo["aspect"], string> = {
@@ -22,11 +22,15 @@ interface TileMediaProps {
  * aspect-ratio placeholder when there is no image.
  */
 export function TileMedia({ src, alt, aspect, sizes }: TileMediaProps) {
-  const source = src === undefined || src === "" ? undefined : src;
-  const srcSet = source === undefined ? undefined : cloudinarySrcSet(source);
-  const resolvedSrc = source === undefined ? undefined : cloudinaryDefaultSrc(source);
+  const {
+    src: resolvedSrc,
+    srcSet,
+    sizes: resolvedSizes,
+  } = useCloudinaryImage(src ?? "", {
+    sizes,
+  });
 
-  if (resolvedSrc === undefined) {
+  if (resolvedSrc === "") {
     return (
       <div className="overflow-hidden">
         <div
@@ -43,7 +47,7 @@ export function TileMedia({ src, alt, aspect, sizes }: TileMediaProps) {
       <img
         src={resolvedSrc}
         srcSet={srcSet}
-        sizes={srcSet === undefined ? undefined : sizes}
+        sizes={resolvedSizes}
         alt={alt}
         loading="lazy"
         decoding="async"

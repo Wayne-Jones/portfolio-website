@@ -61,7 +61,7 @@ export function ArticleHeader({
             hasText(imageTransitionName) ? { viewTransitionName: imageTransitionName } : undefined
           }
         >
-          <FigureImage image={image} />
+          <FigureImage image={image} priority />
         </div>
       )}
 

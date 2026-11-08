@@ -201,12 +201,36 @@ consumer.
 ### Cloudinary images
 
 Set `VITE_CLOUDINARY_CLOUD_NAME` (see `.env.example`) to the Cloudinary cloud
-name used by post images. `FigureImage` detects URLs matching
-`res.cloudinary.com/<cloud-name>/image/upload/...` and emits a `srcset` with
-`c_scale,w_400|800|1200|1600` variants (the plain `src` uses the 1200px
-variant). When the variable is unset, or the URL points at a different cloud,
-images render with their original URL. `Gallery` renders each image through
+name used by post images. `FigureImage`, `TileMedia`, and the other image
+surfaces detect URLs matching
+`res.cloudinary.com/<cloud-name>/image/upload/...` and emit `srcset` variants
+with `c_scale,w_<N>,f_auto,q_auto`:
+
+- **Inline images** (post bodies, galleries): `400`, `800`, `1200`, `1600`,
+  lazy-loaded with a `1200w` plain `src` and the
+  `(min-width: 768px) 720px, 100vw` sizes hint.
+- **Detail heroes** (blog, portfolio, photo set): `priority` opts into `400`,
+  `800`, `1200`, `1600`, `2400`, `3200`, `fetchpriority="high"`,
+  `loading="eager"`, `decoding="sync"`, and the
+  `(min-width: 1024px) 1024px, 100vw` sizes hint.
+- **Blur-up placeholder**: priority Cloudinary heroes also emit a
+  `w_40,e_blur:1000,q_auto,f_auto` image behind the real photo. It is removed
+  once the real image loads, so the full image never depends on hydration to
+  paint.
+- **Layout reservation**: heroes reserve space from the image node's
+  `width`/`height`; pass `aspectRatio` when a source has no intrinsic
+  dimensions.
+
+`f_auto` negotiates AVIF/WebP and `q_auto` picks a sensible quality, so the
+browser downloads a smaller file for the same visual result. When the variable
+is unset, or the URL points at a different cloud, images render with their
+original URL and no `srcset`. `Gallery` renders each image through
 `FigureImage`, so galleries get the same treatment.
+
+Cloudinary's free tier includes 25k transformations/month. Variant URLs are
+cached individually by the CDN, so only the first request for a given
+width/format pays the transformation cost. If traffic grows beyond the free
+tier, move to Ghost's native CDN or self-host the assets.
 
 Snapshots in `src/content/data/` are validated against the canonical types at
 module load (`src/content/validate.ts`), so a stale snapshot fails fast instead
