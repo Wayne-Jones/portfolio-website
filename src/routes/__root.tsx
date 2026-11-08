@@ -1,7 +1,6 @@
 import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
 
 // Import global styles — base resets + Tailwind v4 design tokens
-import "@/index.css";
 import "@/styles/globals.css";
 
 export const Route = createRootRoute({
@@ -41,15 +40,21 @@ function RootLayout() {
           Skip to content
         </a>
 
-        {/* Centered max-width container keeps layout consistent on large screens. */}
-        <div className="mx-auto flex min-h-dvh w-full max-w-[1920px] flex-col">
+        {/* Centered max-width container keeps layout consistent on large screens.
+            --page-gutter is the single page inset; full-bleed regions derive
+            their negative margin from it. */}
+        <div className="mx-auto flex min-h-dvh w-full max-w-[1920px] flex-col [--page-gutter:0.75rem] sm:[--page-gutter:1rem]">
           <SiteHeader />
 
-          <main id="main" className="page-content flex-1 px-3 py-4" aria-label="Main content">
+          <main
+            id="main"
+            className="page-content flex-1 px-(--page-gutter) py-4"
+            aria-label="Main content"
+          >
             <Outlet />
           </main>
 
-          <footer className="border-t border-t-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] p-3 text-sm text-muted">
+          <footer className="border-t border-t-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-(--page-gutter) py-3 text-sm text-muted">
             <p className="m-0">&copy; {currentYear} Portfolio. All rights reserved.</p>
           </footer>
         </div>
@@ -62,12 +67,15 @@ function RootLayout() {
 
 function SiteHeader() {
   return (
-    <header className="flex items-center justify-between border-b border-b-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-3 py-2">
-      <Link to="/" className="font-display text-[1.25rem] font-semibold text-fg no-underline">
+    <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-b-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-(--page-gutter) py-2">
+      <Link
+        to="/"
+        className="min-w-0 font-display text-[1.25rem] font-semibold text-fg no-underline"
+      >
         Portfolio
       </Link>
-      <nav aria-label="Primary">
-        <ul className="m-0 flex list-none gap-3 p-0">
+      <nav aria-label="Primary" className="min-w-0">
+        <ul className="m-0 flex list-none flex-wrap gap-x-3 gap-y-1 p-0">
           {navLinks.map((link) => (
             <li key={link.to}>
               <Link

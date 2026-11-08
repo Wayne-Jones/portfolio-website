@@ -42,7 +42,7 @@ The project SHALL define an 8px base spacing rhythm and responsive breakpoints.
 #### Scenario: Spacing is 8px-based
 
 - **WHEN** using Tailwind spacing utilities at any supported viewport
-- **THEN** `p-4` equals 16px (2 × 8px base)
+- **THEN** `p-4` equals 32px (4 × 8px base)
 - **AND** the value does not change across the 1024px breakpoint
 
 #### Scenario: Breakpoints are defined
