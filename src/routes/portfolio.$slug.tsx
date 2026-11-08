@@ -57,6 +57,7 @@ function PortfolioProject() {
   return (
     <ArticleLayout
       breadcrumbs={[{ label: "Portfolio", to: "/portfolio" }]}
+      current={project.title}
       header={
         <ArticleHeader
           title={project.title}
@@ -71,7 +72,7 @@ function PortfolioProject() {
           image={
             project.featureImage === undefined || project.featureImage === ""
               ? undefined
-              : { src: project.featureImage, alt: project.title }
+              : { src: project.featureImage, alt: "" }
           }
           imageTransitionName={`work-tile-${project.slug}`}
           emptyImageFallback
