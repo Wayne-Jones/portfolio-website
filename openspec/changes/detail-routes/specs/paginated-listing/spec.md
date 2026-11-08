@@ -4,7 +4,7 @@
 
 Define paginated list routes for blog posts and portfolio projects, including the URL scheme, page size, and enumeration at build time.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Page size is fixed
 
@@ -21,11 +21,15 @@ The page size for `/blog` and `/portfolio` listing pages SHALL be 12 items per p
 
 ### Requirement: URL scheme is `/<base>/page/N`
 
-The paginated URLs SHALL follow `/blog/page/N` and `/portfolio/page/N`. Page 1 is `/blog` and `/portfolio` (no `/page/1`).
+The paginated URLs SHALL follow `/blog/page/N` and `/portfolio/page/N`. Page 1 is `/blog` and `/portfolio` — the `/page/1` form redirects to the bare listing URL.
 
 #### Scenario: Page 1 has no suffix
 - **WHEN** the user navigates to the first page of `/blog`
 - **THEN** the URL is `/blog` (not `/blog/page/1`)
+
+#### Scenario: Page 1 suffix redirects
+- **WHEN** the user navigates to `/blog/page/1` or `/portfolio/page/1`
+- **THEN** the route redirects to `/blog` or `/portfolio` respectively
 
 #### Scenario: Subsequent pages have numeric suffix
 - **WHEN** the user clicks "Next page" on `/blog`
@@ -49,7 +53,7 @@ A listing page SHALL render only the items for that page, not the full content l
 
 #### Scenario: Listing page renders correct slice
 - **WHEN** the routing for `/blog/page/2` matches
-- **THEN** the route loader calls a content service method (`getPosts({ page: 2, limit: 12 })` or equivalent)
+- **THEN** the route loader calls `contentService.getPosts()` and slices it with `resolvePage` (the ContentService contract returns the full collection)
 - **AND** the listing UI renders items 13-24 (or whichever window corresponds to page 2)
 
 #### Scenario: Page within range
@@ -58,7 +62,7 @@ A listing page SHALL render only the items for that page, not the full content l
 
 #### Scenario: Page out of range returns 404
 - **WHEN** the user visits `/blog/page/999` for a blog with fewer than 999*12 posts
-- **THEN** the page renders the editorial 404 affordance
+- **THEN** the page renders the editorial 404 affordance with an HTTP 404 status
 
 ### Requirement: Pagination controls are visible
 

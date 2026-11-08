@@ -4,7 +4,7 @@
 
 Define the `/portfolio/$slug` route that loads and renders a single portfolio project (case study) with project-specific metadata and a gallery below the body.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Page loads the project by slug
 
@@ -17,11 +17,11 @@ The `/portfolio/$slug` route SHALL load the project corresponding to the route's
 
 #### Scenario: Missing project returns 404
 - **WHEN** the user navigates to `/portfolio/<slug>` for an unknown slug
-- **THEN** the loader returns null and the route renders the editorial 404 affordance
+- **THEN** the loader throws `notFound()` and the route renders the editorial 404 affordance with an HTTP 404 status
 
 ### Requirement: Article header renders project metadata
 
-The portfolio detail page SHALL render, in order: title as `<h1>`, project metadata line (role, client, year), the canonical eyebrow tag for `portfolio` posts, and optional feature image.
+The portfolio detail page SHALL render, in order: the optional feature image (or empty headline band), the eyebrow label, the title as `<h1>`, and the project metadata line (role, client, year).
 
 #### Scenario: Title renders
 - **WHEN** the loaded project has `title`
@@ -50,7 +50,7 @@ The portfolio detail page SHALL render the project's `content` field by passing 
 The portfolio detail page SHALL render a `Gallery` section after the body when `project.gallery[]` is non-empty.
 
 #### Scenario: Gallery renders image grid
-- **WHEN** the loaded project has `gallery: string[]` with one or more images
+- **WHEN** the loaded project has `gallery: GalleryImage[]` with one or more images
 - **THEN** a `<Gallery>` section renders below the body with each image laid out in masonry style
 - **AND** each image uses `FigureImage` (so Cloudinary srcsets apply)
 

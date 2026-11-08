@@ -4,7 +4,7 @@
 
 Define the `/photography/$slug` route that loads and renders a single photo set with a full-bleed image grid.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Page loads the photo set by slug
 
@@ -17,7 +17,7 @@ The `/photography/$slug` route SHALL load the photo set corresponding to the rou
 
 #### Scenario: Missing photo set returns 404
 - **WHEN** the user navigates to `/photography/<slug>` for an unknown slug
-- **THEN** the loader returns null and the route renders the editorial 404 affordance
+- **THEN** the loader throws `notFound()` and the route renders the editorial 404 affordance with an HTTP 404 status
 
 ### Requirement: Header renders photo set metadata
 

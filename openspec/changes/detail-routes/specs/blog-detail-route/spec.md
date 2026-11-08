@@ -4,7 +4,7 @@
 
 Define the `/blog/$slug` route that loads and renders a single blog post with full body, header metadata, and tag chips.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Page loads the post by slug
 
@@ -17,7 +17,7 @@ The `/blog/$slug` route SHALL load the post corresponding to the slug route para
 
 #### Scenario: Missing post returns 404
 - **WHEN** a user navigates to `/blog/<slug>` for an unknown slug
-- **THEN** the loader returns null and the route renders the editorial 404 affordance
+- **THEN** the loader throws `notFound()` and the route renders the editorial 404 affordance with an HTTP 404 status
 
 ### Requirement: Article header renders slugged metadata
 
@@ -26,7 +26,7 @@ The blog detail page SHALL render, in order: the post's feature image, title as 
 #### Scenario: Header renders feature image
 - **WHEN** the loaded post has `featureImage`
 - **THEN** the header includes the image with intrinsic aspect-ratio preservation
-- **AND** the image has `alt` text from the canonical `featureImage` alt (the renderer emits an empty alt for decorative feature images, leveraging `image.alt` from the renderer)
+- **AND** the image's `alt` is the post title, since the canonical `Post.featureImage` field is a URL string with no separate alt text
 
 #### Scenario: Header renders title
 - **WHEN** the loaded post has `title`
