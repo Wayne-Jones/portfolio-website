@@ -1,4 +1,7 @@
 import type { ContentService, Photo, PhotoSet, Post, Project } from "../types.ts";
+import { mockPhotoSets } from "./mock-fixtures/photo-sets.ts";
+import { mockPosts } from "./mock-fixtures/posts.ts";
+import { mockProjects } from "./mock-fixtures/projects.ts";
 
 /**
  * Mock adapter — returns placeholder data for development.
@@ -8,222 +11,9 @@ import type { ContentService, Photo, PhotoSet, Post, Project } from "../types.ts
  * Ghost instance.
  *
  * Updated to use canonical ContentTree literals for proper shape validation.
+ * Fixture image URLs point at Unsplash's CDN as placeholder art — they are
+ * hotlinked by the browser in dev only and never fetched at build time.
  */
-
-const now = "2026-01-01T00:00:00.000Z";
-
-const mockPosts: Post[] = [
-  {
-    id: "post-1",
-    slug: "designing-for-the-quiet-web",
-    title: "Designing for the quiet web",
-    excerpt: "Notes on visual hierarchy, restraint, and the studio-craft aesthetic.",
-    content: [
-      {
-        type: "heading",
-        level: 2,
-        id: "the-quiet-web",
-        children: [{ type: "text", value: "The quiet web" }],
-      },
-      {
-        type: "paragraph",
-        children: [
-          { type: "text", value: "This is placeholder blog content that documents the canonical " },
-          { type: "strong", children: [{ type: "text", value: "content tree" }] },
-          { type: "text", value: " shape. Read more in the " },
-          { type: "link", href: "/blog", children: [{ type: "text", value: "writing index" }] },
-          { type: "text", value: " and check " },
-          { type: "inlineCode", value: "VITE_CMS=ghost" },
-          { type: "text", value: " for live content." },
-        ],
-      },
-      {
-        type: "image",
-        src: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
-        alt: "A quiet studio desk",
-        caption: "Placeholder image block",
-      },
-      {
-        type: "codeBlock",
-        language: "typescript",
-        code: 'const tree: ContentTree = [{ type: "divider" }];',
-      },
-    ],
-    featureImage: undefined,
-    publishedAt: now,
-    readingTime: 4,
-    tags: ["design", "essays"],
-  },
-  {
-    id: "post-2",
-    slug: "on-type-systems",
-    title: "On type systems",
-    excerpt: "Why Switzer + Inter pair well, and how fluid type scales beat rigid breakpoints.",
-    content: [
-      {
-        type: "paragraph",
-        children: [
-          {
-            type: "text",
-            value: "Placeholder content for the second blog post",
-          },
-        ],
-      },
-    ],
-    publishedAt: now,
-    readingTime: 6,
-    tags: ["typography"],
-  },
-  {
-    id: "post-3",
-    slug: "building-with-restraint",
-    title: "Building with restraint",
-    excerpt: "Why the best interfaces often say the least, and how constraints breed creativity.",
-    content: [
-      {
-        type: "paragraph",
-        children: [
-          {
-            type: "text",
-            value: "Placeholder content for the third blog post",
-          },
-        ],
-      },
-    ],
-    publishedAt: now,
-    readingTime: 5,
-    tags: ["design", "craft"],
-  },
-];
-
-const mockProjects: Project[] = [
-  {
-    id: "project-1",
-    slug: "northwind-studio",
-    title: "Northwind Studio",
-    excerpt: "A brand site for an independent design studio.",
-    content: [
-      {
-        type: "paragraph",
-        children: [{ type: "text", value: "Placeholder case study content" }],
-      },
-    ],
-    publishedAt: now,
-    role: "Design + build",
-    client: "Northwind Studio",
-    year: 2025,
-    gallery: [],
-    tags: ["portfolio", "web"],
-  },
-  {
-    id: "project-2",
-    slug: "halcyon-coffee",
-    title: "Halcyon Coffee",
-    excerpt: "A modular publishing system for a long-form journalism outlet.",
-    content: [
-      {
-        type: "paragraph",
-        children: [{ type: "text", value: "Placeholder case study content" }],
-      },
-    ],
-    publishedAt: now,
-    role: "Lead engineer",
-    client: "Halcyon Coffee Co.",
-    year: 2024,
-    gallery: [],
-    tags: ["portfolio", "publishing"],
-  },
-  {
-    id: "project-3",
-    slug: "stone-mountain-wines",
-    title: "Stone Mountain Wines",
-    excerpt: "An e-commerce experience for a boutique vineyard.",
-    content: [
-      {
-        type: "paragraph",
-        children: [{ type: "text", value: "Placeholder case study content" }],
-      },
-    ],
-    publishedAt: now,
-    role: "Full-stack development",
-    client: "Stone Mountain Vineyards",
-    year: 2024,
-    gallery: [],
-    tags: ["portfolio", "ecommerce"],
-  },
-  {
-    id: "project-4",
-    slug: "lighthouse-journal",
-    title: "Lighthouse Journal",
-    excerpt: "A digital home for an independent literary magazine.",
-    content: [
-      {
-        type: "paragraph",
-        children: [{ type: "text", value: "Placeholder case study content" }],
-      },
-    ],
-    publishedAt: now,
-    role: "Design + development",
-    client: "Lighthouse Journal",
-    year: 2023,
-    gallery: [],
-    tags: ["portfolio", "editorial"],
-  },
-];
-
-const mockPhotoSets: PhotoSet[] = [
-  {
-    id: "photoset-1",
-    slug: "coastal-mornings",
-    title: "Coastal mornings",
-    excerpt: "A series of long-exposure shots from the Oregon coast.",
-    content: [
-      {
-        type: "paragraph",
-        children: [{ type: "text", value: "Placeholder photo set description" }],
-      },
-    ],
-    coverImage: undefined,
-    publishedAt: now,
-    location: "Oregon, USA",
-    camera: "Fujifilm X-T5",
-    images: [],
-    tags: ["photography"],
-  },
-  {
-    id: "photoset-2",
-    slug: "urban-edges",
-    title: "Urban edges",
-    excerpt: "Contrasting textures of city architecture and natural elements.",
-    content: [
-      {
-        type: "paragraph",
-        children: [
-          {
-            type: "text",
-            value: "Placeholder description for urban photography set",
-          },
-        ],
-      },
-    ],
-    coverImage: undefined,
-    publishedAt: now,
-    location: "Portland, OR",
-    camera: "Sony A7IV",
-    images: [],
-    tags: ["photography", "city"],
-  },
-];
-
-const mockPhotos: Photo[] = [
-  { src: "", alt: "Brooklyn, 2025", aspect: "landscape" },
-  { src: "", alt: "Maine coast, 2025", aspect: "landscape" },
-  { src: "", alt: "Portrait study, 2024", aspect: "portrait" },
-  { src: "", alt: "Central Park, 2025", aspect: "square" },
-  { src: "", alt: "Hudson Valley, 2024", aspect: "landscape" },
-  { src: "", alt: "Street scene, 2024", aspect: "portrait" },
-  { src: "", alt: "Dusk over the East River, 2025", aspect: "landscape" },
-];
 
 export class MockAdapter implements ContentService {
   getPosts(): Promise<Post[]> {
@@ -255,7 +45,20 @@ export class MockAdapter implements ContentService {
   }
 
   getFeaturedPhotos(limit: number): Promise<Photo[]> {
-    return Promise.resolve(mockPhotos.slice(0, limit));
+    const photos: Photo[] = [];
+    for (const set of mockPhotoSets) {
+      const src = set.coverImage ?? set.images[0];
+      if (src === undefined || src === "") continue;
+
+      photos.push({
+        src,
+        alt: set.title,
+        aspect: "landscape",
+        setSlug: set.slug,
+      });
+      if (photos.length >= limit) break;
+    }
+    return Promise.resolve(photos);
   }
 
   getRecentPosts(limit: number): Promise<Post[]> {

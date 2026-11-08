@@ -1,0 +1,61 @@
+import type { PhotoSet } from "../../types.ts";
+
+export const mockPhotoSets: PhotoSet[] = [
+  {
+    id: "photoset-1",
+    slug: "coastal-mornings",
+    title: "Coastal mornings",
+    excerpt: "A series of long-exposure shots from the Oregon coast.",
+    content: [
+      {
+        type: "paragraph",
+        children: [{ type: "text", value: "Placeholder photo set description" }],
+      },
+    ],
+    coverImage:
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80",
+    publishedAt: "2026-01-01T00:00:00.000Z",
+    location: "Oregon, USA",
+    camera: "Fujifilm X-T5",
+    images: [
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80",
+    ],
+    tags: ["photography"],
+  },
+  {
+    id: "photoset-2",
+    slug: "urban-edges",
+    title: "Urban edges",
+    excerpt: "Contrasting textures of city architecture and natural elements.",
+    content: [
+      {
+        type: "paragraph",
+        children: [
+          {
+            type: "text",
+            value: "Placeholder description for urban photography set",
+          },
+        ],
+      },
+    ],
+    coverImage:
+      "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=2000&q=80",
+    publishedAt: "2026-01-01T00:00:00.000Z",
+    location: "Portland, OR",
+    camera: "Sony A7IV",
+    images: [
+      "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1470723710355-95304d8aece4?auto=format&fit=crop&w=1600&q=80",
+    ],
+    tags: ["photography", "city"],
+  },
+];
