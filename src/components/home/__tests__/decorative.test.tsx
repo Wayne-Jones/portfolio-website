@@ -30,13 +30,13 @@ describe("ContactFooter", () => {
 describe("Hero", () => {
   it("hides the emoji and leaves the greeting as plain text", () => {
     const html = render(<Hero />);
-    // Remove the decorative span entirely, then strip remaining markup so the
-    // assertion reflects what assistive technology reads.
-    const text = html.replace(/<span aria-hidden="true">👋<\/span>/u, "").replace(/<[^>]+>/gu, "");
 
-    expect(html).toContain('<span aria-hidden="true">👋</span> My name is Wayne Jones');
-    expect(text).not.toContain("👋");
-    expect(text).toContain("My name is Wayne Jones and I am a...");
+    // The emoji appears once, inside an aria-hidden span, so assistive
+    // technology reads only the greeting that follows it.
+    expect(html).toContain(
+      '<span aria-hidden="true">👋</span> My name is Wayne Jones and I am a...',
+    );
+    expect(html.match(/👋/gu)).toHaveLength(1);
   });
 
   it("keeps a single h1 on the homepage hero and contact footer", () => {
