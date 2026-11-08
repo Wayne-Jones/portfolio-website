@@ -80,9 +80,9 @@ export function Hero() {
           👋 My Name is Wayne Jones and I am a...
         </p>
 
-        <h1 className="hero-entrance text-center font-display text-[40px] leading-[0.95] font-black tracking-[-0.06em] sm:text-[56px] md:text-[80px] lg:text-[clamp(120px,12vw,175px)]">
-          <span className="block whitespace-nowrap">Web Developer</span>
-          <span className="text-outline block whitespace-nowrap">& Photographer</span>
+        <h1 className="hero-entrance text-center font-display text-[clamp(2rem,9vw,10.9rem)] leading-[0.95] font-black tracking-[-0.06em]">
+          <span className="block">Web Developer</span>
+          <span className="text-outline block">& Photographer</span>
         </h1>
 
         <p className="hero-entrance mt-6 text-center text-[clamp(20px,2.5vw,32px)] text-muted sm:mt-10 lg:text-left">
