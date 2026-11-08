@@ -72,7 +72,7 @@ export function ArticleLayout({
         <div
           className={cn(
             "mt-12 border-t border-t-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] pt-8",
-            footerFullBleed ? "-mx-3" : "mx-auto w-full max-w-3xl",
+            footerFullBleed ? "-mx-(--page-gutter,0.75rem)" : "mx-auto w-full max-w-3xl",
           )}
         >
           {footer}
