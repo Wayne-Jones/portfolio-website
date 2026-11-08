@@ -4,15 +4,22 @@ import type { Photo } from "@/content/types";
 
 interface PhotographyProps {
   photos: Photo[];
+  /** True while the section's deferred content is pending. */
+  loading?: boolean;
 }
 
 const skeletonCount = 6;
 
-export function Photography({ photos }: PhotographyProps) {
-  if (photos.length === 0) {
+export function Photography({ photos, loading = false }: PhotographyProps) {
+  if (loading) {
     return (
-      <Section eyebrow="PHOTOGRAPHY" title="Recent work">
-        <div className="columns-2 gap-4 md:columns-3">
+      <Section
+        eyebrow="PHOTOGRAPHY"
+        title="Recent work"
+        loading
+        loadingMessage="Loading recent photography…"
+      >
+        <div aria-hidden="true" className="columns-2 gap-4 md:columns-3">
           {Array.from({ length: skeletonCount }, (_, i) => (
             <div
               key={i}
@@ -21,6 +28,14 @@ export function Photography({ photos }: PhotographyProps) {
             />
           ))}
         </div>
+      </Section>
+    );
+  }
+
+  if (photos.length === 0) {
+    return (
+      <Section eyebrow="PHOTOGRAPHY" title="Recent work">
+        <p className="text-muted">No photographs yet.</p>
       </Section>
     );
   }

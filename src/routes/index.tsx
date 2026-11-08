@@ -38,13 +38,13 @@ function Homepage() {
   return (
     <>
       <Hero />
-      <Suspense fallback={<WorkPortfolio projects={[]} />}>
+      <Suspense fallback={<WorkPortfolio projects={[]} loading />}>
         <WorkPortfolioSection projects={projects} />
       </Suspense>
-      <Suspense fallback={<Photography photos={[]} />}>
+      <Suspense fallback={<Photography photos={[]} loading />}>
         <PhotographySection photos={photos} />
       </Suspense>
-      <Suspense fallback={<RecentPosts posts={[]} />}>
+      <Suspense fallback={<RecentPosts posts={[]} loading />}>
         <RecentPostsSection posts={posts} />
       </Suspense>
       <ContactFooter />
