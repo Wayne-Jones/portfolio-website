@@ -61,12 +61,15 @@ function RootLayout() {
 
 function SiteHeader() {
   return (
-    <header className="flex items-center justify-between border-b border-b-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-3 py-2">
-      <Link to="/" className="font-display text-[1.25rem] font-semibold text-fg no-underline">
+    <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-b-[color-mix(in_oklch,var(--color-fg)_10%,transparent)] px-3 py-2">
+      <Link
+        to="/"
+        className="min-w-0 font-display text-[1.25rem] font-semibold text-fg no-underline"
+      >
         Portfolio
       </Link>
-      <nav aria-label="Primary">
-        <ul className="m-0 flex list-none gap-3 p-0">
+      <nav aria-label="Primary" className="min-w-0">
+        <ul className="m-0 flex list-none flex-wrap gap-x-3 gap-y-1 p-0">
           {navLinks.map((link) => (
             <li key={link.to}>
               <Link
