@@ -27,7 +27,8 @@ Each tile SHALL link to `/photography/<slug>` and SHALL render the set title, th
 #### Scenario: Cover image is preferred
 
 - **WHEN** a photo set has a `coverImage`
-- **THEN** the tile renders that image with the set title as its `alt` text
+- **THEN** the tile renders that image as decorative media (`alt=""`) because the set title is adjacent in the same link
+- **AND** the tile's accessible name is the set title, announced once
 
 #### Scenario: First image is the fallback
 
@@ -60,12 +61,24 @@ Each tile's linked element SHALL declare `view-transition-name: photo-<slug>`, m
 
 ### Requirement: Homepage preview renders featured photos
 
-The homepage photography section SHALL render the image for each featured photo returned by `getFeaturedPhotos()`, using the set title as `alt` text, and SHALL keep the existing link and `photo-<slug>` transition name.
+The homepage photography section SHALL render the image for each featured photo returned by `getFeaturedPhotos()`, using the photo's descriptive `alt` text, and SHALL keep the existing link and `photo-<slug>` transition name.
 
 #### Scenario: Featured image renders
 
 - **WHEN** a featured photo has a `src`
-- **THEN** the tile renders an `<img>` with that source, the set title as `alt`, and lazy loading
+- **THEN** the tile renders an `<img>` with that source, its descriptive `alt`, and lazy loading
+
+#### Scenario: Duplicate caption is not announced
+
+- **WHEN** the tile overlays the photo's description as visible caption text
+- **THEN** that overlay is hidden from assistive technology
+- **AND** the image is announced once
+
+#### Scenario: Caption reveals on keyboard focus
+
+- **WHEN** a keyboard user focuses the photo tile link
+- **THEN** the caption overlay becomes visible
+- **AND** the tile renders a visible focus indicator
 
 #### Scenario: Tile still links to the set
 

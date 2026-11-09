@@ -49,8 +49,9 @@ The project SHALL define typography tokens using Switzer for display/headings an
 
 #### Scenario: Type scale uses fluid sizing
 
-- **WHEN** the hero display text renders
-- **THEN** it uses `clamp()` for fluid sizing between mobile and desktop without breakpoint jumps
+- **WHEN** body copy or hero display text renders
+- **THEN** every responsive type step uses `clamp()` between its mobile and desktop sizes
+- **AND** no breakpoint introduces a discrete font-size jump
 
 ### Requirement: Spacing and breakpoint tokens
 
@@ -58,8 +59,9 @@ The project SHALL define an 8px base spacing rhythm and responsive breakpoints.
 
 #### Scenario: Spacing is 8px-based
 
-- **WHEN** using Tailwind spacing utilities
-- **THEN** `p-4` equals 16px (2 × 8px base)
+- **WHEN** using Tailwind spacing utilities at any supported viewport
+- **THEN** `p-4` equals 32px (4 × 8px base)
+- **AND** the value does not change across the 1024px breakpoint
 
 #### Scenario: Breakpoints are defined
 
@@ -79,3 +81,19 @@ The project SHALL support toggling between light and dark themes via a `.dark` c
 
 - **WHEN** the user manually selects light theme
 - **THEN** the light theme is active regardless of OS preference
+
+### Requirement: Single source of base styles
+
+The project SHALL define root typography, spacing, and base element styles in one token stylesheet, with no competing scaffold stylesheet loaded ahead of it.
+
+#### Scenario: Only the token stylesheet sets root typography
+
+- **WHEN** the application loads
+- **THEN** the root font size and spacing base come from the token stylesheet alone
+- **AND** no legacy scaffold stylesheet sets a competing root font size, spacing scale, or color palette
+
+#### Scenario: Root sizing is continuous
+
+- **WHEN** the viewport crosses the desktop breakpoint at 1024px and 1025px
+- **THEN** the root font size and body font size change only through a fluid value
+- **AND** no discrete root font-size step occurs at that boundary
